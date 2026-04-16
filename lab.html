@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Research — Adb</title>
+    <meta name="author" content="Ahnaf Adib" />
+    <meta
+      name="description"
+      content="Research systems and applied AI engineering work by Ahnaf Adib."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/site-icon.png" />
+
+    <link rel="stylesheet" href="/globals.css" />
+    <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/lab.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body>
+    <div class="transition-grid">
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+    </div>
+
+    <script>
+      if (sessionStorage.getItem("pageTransition") === "true") {
+        const grid = document.querySelector(".transition-grid");
+        if (grid) {
+          grid.style.backgroundColor = "var(--bg)";
+          grid.style.zIndex = "1000";
+          grid.style.pointerEvents = "auto";
+        }
+        const blocks = grid.querySelectorAll(".transition-block");
+        blocks.forEach((block) => {
+          block.style.opacity = "1";
+        });
+      }
+    </script>
+
+    <nav>
+      <div class="container">
+        <div class="nav-clock">
+          <p class="type-mono">18 <span>:</span> 25 CT</p>
+        </div>
+
+        <div class="nav-logo">
+          <a href="/" class="type-mono">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1000"
+              height="1000"
+              viewBox="0 0 1000 1000"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_1002_3)">
+                <path
+                  d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
+                  fill="black"
+                />
+                <path
+                  d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
+                  fill="black"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_1002_3">
+                  <rect width="1000" height="1000" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          </a>
+        </div>
+
+        <div class="nav-location">
+          <p class="type-mono">
+            <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
+          </p>
+        </div>
+      </div>
+    </nav>
+
+    <div class="menu-toggle-btn">
+      <div class="hamburger-bar"></div>
+      <div class="hamburger-bar"></div>
+    </div>
+
+    <div class="menu-overlay">
+      <div class="menu-bg">
+        <canvas id="menu-canvas"></canvas>
+      </div>
+
+      <div class="menu-overlay-nav">
+        <div class="close-btn">
+          <div class="close-btn-bar"></div>
+          <div class="close-btn-bar"></div>
+        </div>
+
+        <div class="menu-overlay-items">
+          <a
+            class="type-mono"
+            href="https://www.linkedin.com/in/ahnaf-adib369/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          <a
+            class="type-mono"
+            href="https://x.com/Ad1bAhnaf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Twitter</a
+          >
+        </div>
+      </div>
+
+      <div class="menu-overlay-footer">
+        <a class="type-mono" href="/lab">Research Access</a>
+        <a class="type-mono" href="/contact">Get in Touch</a>
+      </div>
+
+      <div class="circular-menu">
+        <div class="joystick">
+          <ion-icon
+            name="grid-sharp"
+            class="center-icon center-main"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-up-sharp"
+            class="center-icon center-up"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-down-sharp"
+            class="center-icon center-down"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-back-sharp"
+            class="center-icon center-left"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-forward-sharp"
+            class="center-icon center-right"
+          ></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <section class="lab-hero">
+      <div class="container">
+        <h1
+          data-animate-variant="diffuse"
+          data-animate-on-scroll="false"
+          data-animate-delay="0.1"
+        >
+          Research
+        </h1>
+        <p
+          data-animate-variant="slide"
+          data-animate-type="words"
+          data-animate-on-scroll="false"
+          data-animate-delay="0.75"
+        >
+          Systems built from messy text
+        </p>
+      </div>
+      <div class="lab-about-revealer"></div>
+      <div class="lab-hero-overlay"></div>
+    </section>
+
+    <section class="lab-about">
+      <div class="container">
+        <h3
+          class="type-var-2"
+          data-animate-variant="slide"
+          data-animate-type="lines"
+          data-animate-on-scroll="true"
+        >
+          I like research because it lets me be interdisciplinary. Language,
+          public health, food systems, conflict data, and software can all sit
+          at the same table.
+        </h3>
+        <h3
+          class="type-var-2"
+          data-animate-variant="slide"
+          data-animate-type="lines"
+          data-animate-on-scroll="true"
+        >
+          My part is building the systems around that table: pipelines that turn
+          messy text and public data into evidence researchers can inspect.
+        </h3>
+      </div>
+    </section>
+
+    <section class="pie-transition">
+      <div class="pie-transition-outro-header">
+        <h3>
+          I like being interdisciplinary. The good questions rarely stay in one
+          lane.
+        </h3>
+      </div>
+
+      <div class="pie-transition-footer">
+        <div class="container">
+          <p class="type-mono">[ Research Unit ]</p>
+          <p class="type-mono">__ Applied AI Systems</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stats-header">
+        <div class="stats-header-copy">
+          <h3>Research Overview</h3>
+          <p>
+            A compressed view of the systems, funding, and model work behind
+            the portfolio.
+          </p>
+        </div>
+      </div>
+
+      <div class="stats-content">
+        <div class="stat-item">
+          <div class="stat-count">
+            <h1>well</h1>
+          </div>
+          <div class="stat-content">
+            <div class="stat-title">
+              <h3>
+                doing academically well at UT Dallas, but too embarrassed to
+                say my GPA here
+              </h3>
+            </div>
+            <div class="stat-info">
+              <p class="type-mono">Computer Science / May 2027</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-count">
+            <h1>20K</h1>
+          </div>
+          <div class="stat-content">
+            <div class="stat-title">
+              <h3>undergraduate research funding awarded for applied AI work</h3>
+            </div>
+            <div class="stat-info">
+              <p class="type-mono">Research Support</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-count">
+            <h1>agents</h1>
+          </div>
+          <div class="stat-content">
+            <div class="stat-title">
+              <h3>
+                multi-agent research workflows for turning messy text into
+                reviewable evidence
+              </h3>
+            </div>
+            <div class="stat-info">
+              <p class="type-mono">Thematic Analysis / LangGraph</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-count">
+            <h1>nlp</h1>
+          </div>
+          <div class="stat-content">
+            <div class="stat-title">
+              <h3>
+                domain-adapted language systems for conflict data,
+                multilingual QA, and classification
+              </h3>
+            </div>
+            <div class="stat-info">
+              <p class="type-mono">ConfliBERT / Spanish / Arabic</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="publications" id="papers">
+      <div class="container">
+        <div class="publications-header">
+          <p class="type-mono">[ Papers ]</p>
+          <h2>Under Review</h2>
+        </div>
+
+        <div class="publication-row">
+          <p class="type-mono">Scientific Reports</p>
+          <div>
+            <h3>
+              Automating Thematic Analysis of COVID-19 Vaccine Hesitancy in
+              Alaska with Multi-Agent LLM Systems
+            </h3>
+            <p>Adib, A. Review, Springer Nature.</p>
+          </div>
+        </div>
+
+        <div class="publication-row">
+          <p class="type-mono">Agriculture & Food Security</p>
+          <div>
+            <h3>
+              When Growing Food is No Longer Enough: Indigenous Food Security
+              Study
+            </h3>
+            <p>Adib, A. Review, Springer Nature.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="clients">
+      <div class="container">
+        <div class="clients-header">
+          <h2>System Ledger</h2>
+        </div>
+        <div class="clients-list"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-row">
+            <div class="footer-col">
+              <h2>Adb</h2>
+            </div>
+
+            <div class="footer-col">
+              <div class="footer-sub-col">
+                <a href="/"><h3>Index</h3></a>
+                <a href="/lab"><h3>Research</h3></a>
+                <a href="/work"><h3>Archive</h3></a>
+                <a href="/lab#papers"><h3>Papers</h3></a>
+                <a href="/contact"><h3>Connect</h3></a>
+              </div>
+
+              <div class="footer-sub-col">
+                <a
+                  href="https://x.com/Ad1bAhnaf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Twitter</a
+                >
+                <a
+                  href="https://www.linkedin.com/in/ahnaf-adib369/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >LinkedIn</a
+                >
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Resume</a
+                >
+                <a
+                  href="mailto:ahnafadib7546@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Email</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-row">
+            <p class="type-mono">The human in the loop</p>
+            <p class="type-mono">[ Python / TypeScript / ML Systems ]</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <svg
+      viewBox="0 0 0 0"
+      aria-hidden="true"
+      style="position: absolute; width: 0; height: 0; pointer-events: none"
+    >
+      <defs>
+        <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140"
+          ></feColorMatrix>
+        </filter>
+      </defs>
+    </svg>
+
+    <script type="module" src="/js/lenis-scroll.js"></script>
+    <script type="module" src="/js/transition.js"></script>
+    <script type="module" src="/js/nav.js"></script>
+    <script type="module" src="/js/menu.js"></script>
+    <script type="module" src="/js/animated-copy.js"></script>
+    <script type="module" src="/js/lab.js"></script>
+    <script type="module" src="/js/particle-visual.js"></script>
+    <script type="module" src="/js/pie-transition.js"></script>
+    <script type="module" src="/js/stats.js"></script>
+    <script type="module" src="/js/clients.js"></script>
+    <script type="module" src="/js/footer.js"></script>
+  </body>
+</html>
