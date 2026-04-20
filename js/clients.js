@@ -8,14 +8,14 @@ const clientsData = [
   "Production Voice Agent",
   "Research Systems",
   "Multi-Agent Thematic Analysis",
-  "ConfliBERT Adaptation",
+  "BERT Conflict NLP",
   "Multilingual Conflict NLP",
   "County Disparities Study",
   "Vaccine Hesitancy Paper",
   "Indigenous Food Security Paper",
-  "SauceBros Sales Forecaster",
-  "CodeCollab Real-Time Editor",
-  "Small Language Model from Scratch",
+  "Torching ML Library",
+  "Tabby Cat Autocomplete",
+  "Mini-Seek Language Model",
 ];
 
 // initialization

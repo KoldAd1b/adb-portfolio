@@ -3,6 +3,8 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/lab", "destination": "/lab.html" },
+    { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/blog/maya", "destination": "/blog/maya.html" },
     { "source": "/work", "destination": "/work.html" },
     { "source": "/project", "destination": "/case/voice-agent.html" },
     { "source": "/case/voice-agent", "destination": "/case/voice-agent.html" },
@@ -10,6 +12,9 @@
     { "source": "/case/saucebros", "destination": "/case/saucebros.html" },
     { "source": "/case/codecollab", "destination": "/case/codecollab.html" },
     { "source": "/case/scratch-lm", "destination": "/case/scratch-lm.html" },
+    { "source": "/case/torching", "destination": "/case/torching.html" },
+    { "source": "/case/tabby-cat", "destination": "/case/tabby-cat.html" },
+    { "source": "/case/mini-seek", "destination": "/case/mini-seek.html" },
     { "source": "/contact", "destination": "/contact.html" }
   ]
 }

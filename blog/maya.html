@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maya — Adb Esoterica</title>
+    <meta name="author" content="Ahnaf Adib" />
+    <meta
+      name="description"
+      content="Maya, a thought-form on reality, perception, feedback, and identity by Ahnaf Adib."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/site-icon.png" />
+
+    <link rel="stylesheet" href="/globals.css" />
+    <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/blog.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body>
+    <div class="transition-grid">
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+    </div>
+
+    <script>
+      if (sessionStorage.getItem("pageTransition") === "true") {
+        const grid = document.querySelector(".transition-grid");
+        if (grid) {
+          grid.style.backgroundColor = "var(--bg)";
+          grid.style.zIndex = "1000";
+          grid.style.pointerEvents = "auto";
+        }
+        const blocks = grid.querySelectorAll(".transition-block");
+        blocks.forEach((block) => {
+          block.style.opacity = "1";
+        });
+      }
+    </script>
+
+    <nav>
+      <div class="container">
+        <div class="nav-clock">
+          <p class="type-mono">18 <span>:</span> 25 CT</p>
+        </div>
+
+        <div class="nav-logo">
+          <a href="/" class="type-mono">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1000"
+              height="1000"
+              viewBox="0 0 1000 1000"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_1002_3)">
+                <path
+                  d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
+                  fill="black"
+                />
+                <path
+                  d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
+                  fill="black"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_1002_3">
+                  <rect width="1000" height="1000" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          </a>
+        </div>
+
+        <div class="nav-location">
+          <p class="type-mono">
+            <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
+          </p>
+        </div>
+      </div>
+    </nav>
+
+    <div class="menu-toggle-btn">
+      <div class="hamburger-bar"></div>
+      <div class="hamburger-bar"></div>
+    </div>
+
+    <div class="menu-overlay">
+      <div class="menu-bg">
+        <canvas id="menu-canvas"></canvas>
+      </div>
+
+      <div class="menu-overlay-nav">
+        <div class="close-btn">
+          <div class="close-btn-bar"></div>
+          <div class="close-btn-bar"></div>
+        </div>
+
+        <div class="menu-overlay-items">
+          <a
+            class="type-mono"
+            href="https://www.linkedin.com/in/ahnaf-adib369/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          <a
+            class="type-mono"
+            href="https://github.com/KoldAd1b"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+
+      <div class="menu-overlay-footer">
+        <a class="type-mono" href="/lab">Research Access</a>
+        <a class="type-mono" href="/blog">Esoterica</a>
+        <a class="type-mono" href="/contact">Get in Touch</a>
+      </div>
+
+      <div class="circular-menu">
+        <div class="joystick">
+          <ion-icon
+            name="grid-sharp"
+            class="center-icon center-main"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-up-sharp"
+            class="center-icon center-up"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-down-sharp"
+            class="center-icon center-down"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-back-sharp"
+            class="center-icon center-left"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-forward-sharp"
+            class="center-icon center-right"
+          ></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="blog-hero blog-hero-post">
+        <img src="/project/project_4.jpg" alt="" />
+        <div class="blog-hero-shade"></div>
+        <div class="container">
+          <div class="blog-hero-copy">
+            <a class="type-mono blog-back-link" href="/blog">Esoterica</a>
+            <p
+              class="type-mono"
+              data-animate-variant="flicker"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.2"
+            >
+              Thought-forms / Philosophy
+            </p>
+            <h1
+              data-animate-variant="diffuse"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.1"
+            >
+              Maya
+            </h1>
+            <p
+              class="blog-dek"
+              data-animate-variant="slide"
+              data-animate-type="lines"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.75"
+            >
+              The reflection mustn’t be the light.
+            </p>
+          </div>
+          <div class="blog-hero-meta">
+            <p class="type-mono">Apr 20, 2026</p>
+            <p class="type-mono">12 min read</p>
+          </div>
+        </div>
+      </section>
+
+      <article class="blog-article">
+        <div class="container">
+          <aside class="blog-article-rail">
+            <p class="type-mono">Category</p>
+            <p>Thought-forms</p>
+            <p class="type-mono">Signal</p>
+            <p>Reality is feedback, not authority.</p>
+          </aside>
+
+          <div class="blog-article-body">
+            <p class="blog-lede">The reflection mustn’t be the light.</p>
+
+            <p>Let’s start by defining reality.</p>
+
+            <p>
+              Reality is not just what is. At least not to a human being.
+              Reality is what you perceive, what you interpret, what you give
+              meaning to, what your mind has been trained to recognize as true.
+            </p>
+
+            <p>
+              There are 8 billion people on earth, but we do not live in one
+              world. We live in 8 billion internal worlds.
+            </p>
+
+            <p>
+              Every person is walking around inside their own mental universe,
+              reacting to their own memories, fears, beliefs, emotions, and
+              assumptions. So when people say “be realistic,” I always have to
+              ask: realistic according to who?
+            </p>
+
+            <p>According to your fear?</p>
+
+            <p>According to your past?</p>
+
+            <p>According to your parents?</p>
+
+            <p>
+              According to the version of you that already decided things are
+              hard?
+            </p>
+
+            <p>
+              Because that is the thing about reality. You do not just see it.
+              You participate in it.
+            </p>
+
+            <p>
+              Reality, by itself, is dead. It is matter. It is appearance. It is
+              Maya. It is the screen. The mind is what projects meaning onto it.
+            </p>
+
+            <p>
+              This is why two people can go through the same situation and leave
+              with completely different worlds.
+            </p>
+
+            <p>One person gets rejected and says, “I’m not good enough.”</p>
+
+            <p>
+              Another person gets rejected and says, “Interesting. I need to
+              move differently.”
+            </p>
+
+            <p>Same event. Different reality.</p>
+
+            <p>
+              So the real issue is not only what happened. The deeper issue is:
+              what did your mind make it mean?
+            </p>
+
+            <p>That is where people lose power.</p>
+
+            <p>
+              They look at reality, and instead of treating it as feedback, they
+              treat it as authority.
+            </p>
+
+            <p>Money is low, so they become poor internally.</p>
+
+            <p>Someone does not respond, so they become unwanted internally.</p>
+
+            <p>A door does not open, so they become behind internally.</p>
+
+            <p>
+              Something takes longer than expected, so they decide they are not
+              chosen.
+            </p>
+
+            <p>But don’t you understand what is happening there?</p>
+
+            <p>
+              Reality showed you an appearance, and then you gave that
+              appearance permission to define you. You made the external world
+              the judge of your internal state. You let something outside of you
+              tell you what you are.
+            </p>
+
+            <p>That is backwards.</p>
+
+            <blockquote>
+              <p>Reality is feedback, not authority.</p>
+            </blockquote>
+
+            <p>Feedback means: this is what is currently being reflected.</p>
+
+            <p>Authority means: this is what is ultimately true.</p>
+
+            <p>Those are not the same thing.</p>
+
+            <p>
+              If I look at my life and see confusion, that does not mean I am a
+              confused person. It means there is something in my mind, my
+              habits, my attention, or my current state that is producing
+              confusion.
+            </p>
+
+            <p>
+              If I see lack, that does not mean I am lack. It means I need to
+              examine where lack is living internally.
+            </p>
+
+            <p>
+              If I see delay, that does not mean I am delayed. It means I need
+              to ask what relationship I have with time, waiting, expectation,
+              and trust.
+            </p>
+
+            <p>Reality is always giving information.</p>
+
+            <p>
+              The problem is that most people do not ask, “What is this showing
+              me?”
+            </p>
+
+            <p>They ask, “What does this say about me?”</p>
+
+            <p>That question is poison.</p>
+
+            <p>
+              Because now every circumstance becomes identity. Every obstacle
+              becomes a verdict. Every slow season becomes some dramatic
+              declaration about who you are and what you can have.
+            </p>
+
+            <p>No.</p>
+
+            <p>You have to stop letting reality name you.</p>
+
+            <p>The reflection mustn’t be the light.</p>
+
+            <p>
+              The external can show you what is being reflected, but it cannot
+              be the source of who you are. It can reveal what you have been
+              assuming, expecting, feeding, fearing, or normalizing. But it
+              cannot become the highest authority unless you give it that
+              throne.
+            </p>
+
+            <p>And people give it that throne every day.</p>
+
+            <p>They check reality like it is a parent.</p>
+
+            <p>“Am I doing well?”</p>
+
+            <p>“Am I safe?”</p>
+
+            <p>“Am I chosen?”</p>
+
+            <p>“Is it working yet?”</p>
+
+            <p>Then reality gives them some temporary appearance and they collapse.</p>
+
+            <p>
+              This is why checking can become a form of worship. You keep
+              returning to the thing you claim you are above, asking it to
+              approve your state.
+            </p>
+
+            <p>
+              But if you need reality to prove it before you become it, then
+              reality is leading and you are following.
+            </p>
+
+            <p>That is not the order.</p>
+
+            <p>
+              By the order of Hermetic philosophy, the universe is mental. The
+              mental plane gives cause to the physical plane. So before you
+              obsess over what you are doing externally, you need to ask what is
+              happening internally.
+            </p>
+
+            <p>What am I assuming?</p>
+
+            <p>What am I expecting?</p>
+
+            <p>What am I emotionally rehearsing?</p>
+
+            <p>What am I giving attention to?</p>
+
+            <p>What do I secretly think is normal for me?</p>
+
+            <p>
+              Because the way to live a successful life is to live a successful
+              life inside first.
+            </p>
+
+            <p>
+              That sounds simple, but it is not easy. It requires you to sit
+              with yourself. It requires you to examine your own mind. It
+              requires you to stop outsourcing your knowing to everyone else.
+            </p>
+
+            <p>
+              People will read books, scroll for hours, ask for advice, ask for
+              confirmation, ask for another sign, ask for another strategy.
+            </p>
+
+            <p>But when will you sit with your own mind?</p>
+
+            <p>When will you ask yourself what you already know?</p>
+
+            <p>
+              There is a tremendous amount of intelligence inside of you, but
+              you keep treating yourself like you are empty. You keep acting like
+              the answer must be somewhere else.
+            </p>
+
+            <p>Imagine already knowing what to do and still waiting for permission.</p>
+
+            <p>
+              That is how people get stuck. Not because they are incapable, but
+              because they keep making reality the parent. They keep asking the
+              external world, “Am I allowed now?”
+            </p>
+
+            <p>You are allowed when you decide you are allowed.</p>
+
+            <p>
+              This does not mean you avoid reality. Avoiding reality is still
+              giving reality power. If you have to run away from something, that
+              thing owns you.
+            </p>
+
+            <p>The point is not to avoid reality.</p>
+
+            <p>The point is to interact with reality from the right internal state.</p>
+
+            <p>
+              If something is wrong, fix it. If something needs to be done, do
+              it. If there is an action to take, take it.
+            </p>
+
+            <p>But do not take action from panic and then call that wisdom.</p>
+
+            <p>Mind comes first.</p>
+
+            <blockquote>
+              <p>
+                Do not immediately become the version of yourself that the
+                circumstance is inviting you to become.
+              </p>
+            </blockquote>
+
+            <p>So the practice is simple.</p>
+
+            <p>When something happens, pause.</p>
+
+            <p>
+              Do not immediately become the version of yourself that the
+              circumstance is inviting you to become.
+            </p>
+
+            <p>Ask:</p>
+
+            <p>What is this showing me?</p>
+
+            <p>What am I making this mean?</p>
+
+            <p>What in my mind could be producing this pattern?</p>
+
+            <p>What would I do if this had no authority over who I am?</p>
+
+            <p>That last question matters.</p>
+
+            <p>
+              Because most people are not responding to life. They are reacting
+              to the identity life triggered in them.
+            </p>
+
+            <p>
+              They are not responding to the bank account. They are reacting as
+              “the person who is never safe.”
+            </p>
+
+            <p>
+              They are not responding to rejection. They are reacting as “the
+              person who is never chosen.”
+            </p>
+
+            <p>
+              They are not responding to slow progress. They are reacting as
+              “the person who is behind.”
+            </p>
+
+            <p>And then they call that being realistic.</p>
+
+            <p>But that is not realism. That is obedience to an old internal world.</p>
+
+            <p>Reality is feedback.</p>
+
+            <p>Use it. Study it. Let it reveal where your mind has been living.</p>
+
+            <p>But do not worship it.</p>
+
+            <p>Do not let a temporary reflection become your permanent identity.</p>
+
+            <p>The reflection mustn’t be the light.</p>
+          </div>
+        </div>
+      </article>
+
+      <section class="blog-next">
+        <div class="container">
+          <p class="type-mono">[ Thought-forms ]</p>
+          <a href="/blog">
+            <h2>Return to Esoterica</h2>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-row">
+            <div class="footer-col">
+              <h2>Adb</h2>
+            </div>
+
+            <div class="footer-col">
+              <div class="footer-sub-col">
+                <a href="/"><h3>Index</h3></a>
+                <a href="/lab"><h3>Research</h3></a>
+                <a href="/work"><h3>Archive</h3></a>
+                <a href="/blog"><h3>Esoterica</h3></a>
+                <a href="/lab#papers"><h3>Papers</h3></a>
+                <a href="/contact"><h3>Connect</h3></a>
+              </div>
+
+              <div class="footer-sub-col">
+                <a
+                  href="https://github.com/KoldAd1b"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >GitHub</a
+                >
+                <a
+                  href="https://www.linkedin.com/in/ahnaf-adib369/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >LinkedIn</a
+                >
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Resume</a
+                >
+                <a
+                  href="mailto:ahnafadib7546@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Email</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-row">
+            <p class="type-mono">The human in the loop</p>
+            <p class="type-mono">[ Python / TypeScript / Multi-Agent ML ]</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <svg
+      viewBox="0 0 0 0"
+      aria-hidden="true"
+      style="position: absolute; width: 0; height: 0; pointer-events: none"
+    >
+      <defs>
+        <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140"
+          ></feColorMatrix>
+        </filter>
+      </defs>
+    </svg>
+
+    <script type="module" src="/js/lenis-scroll.js"></script>
+    <script type="module" src="/js/transition.js"></script>
+    <script type="module" src="/js/nav.js"></script>
+    <script type="module" src="/js/menu.js"></script>
+    <script type="module" src="/js/animated-copy.js"></script>
+    <script type="module" src="/js/footer.js"></script>
+  </body>
+</html>

@@ -14,6 +14,7 @@ const MENU_ITEMS = [
   { label: "Index", icon: "compass-sharp", href: "/" },
   { label: "Research", icon: "cube-sharp", href: "/lab" },
   { label: "Archive", icon: "laptop-sharp", href: "/work" },
+  { label: "Esoterica", icon: "book-sharp", href: "/blog" },
   { label: "Papers", icon: "document-text-sharp", href: "/lab#papers" },
   { label: "Connect", icon: "paper-plane-sharp", href: "/contact" },
 ];
