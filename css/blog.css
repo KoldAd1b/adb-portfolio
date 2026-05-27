@@ -97,6 +97,10 @@
   background-color: var(--bg);
 }
 
+.blog-ledger-alt {
+  padding-top: 0;
+}
+
 .blog-ledger .container {
   display: flex;
   flex-direction: column;

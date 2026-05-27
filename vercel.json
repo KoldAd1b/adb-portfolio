@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/lab", "destination": "/lab.html" },
     { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/academia", "destination": "/academia.html" },
     { "source": "/blog/maya", "destination": "/blog/maya.html" },
     { "source": "/work", "destination": "/work.html" },
     { "source": "/project", "destination": "/case/voice-agent.html" },
