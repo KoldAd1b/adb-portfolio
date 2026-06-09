@@ -160,9 +160,16 @@
 
 .blog-article .container {
   display: grid;
-  grid-template-columns: minmax(12rem, 0.75fr) minmax(0, 1.65fr);
-  gap: 6rem;
+  grid-template-columns: minmax(11rem, 0.45fr) minmax(0, 2.55fr);
+  gap: 5rem;
   align-items: start;
+}
+
+/* Let the grid tracks collapse to the viewport instead of being held open
+   by wide (non-wrapping) math content — the classic min-width:auto trap. */
+.blog-article-rail,
+.blog-article-body {
+  min-width: 0;
 }
 
 .blog-article-rail {
@@ -191,6 +198,17 @@
 }
 
 .blog-article-body {
+  max-width: 1080px;
+}
+
+/* Keep running prose at a comfortable measure; display math (.blog-eq)
+   is free to use the full, wider column. */
+.blog-article-body p,
+.blog-article-body li,
+.blog-article-body h2,
+.blog-article-body h3,
+.blog-article-body .blog-eyebrow,
+.blog-article-body .blog-math-note {
   max-width: 68ch;
 }
 
@@ -222,6 +240,120 @@
   font-size: 2.4rem;
   line-height: 0.98;
   letter-spacing: 0;
+}
+
+.blog-article-body h2 {
+  margin: 3rem 0 1.25rem 0;
+  font-family: var(--type-1);
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.blog-article-body h3 {
+  margin: 2.25rem 0 1rem 0;
+  font-family: var(--type-1);
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.blog-article-body .blog-eyebrow {
+  margin: 0 0 0.5rem 0;
+  font-family: var(--type-3);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(7, 7, 7, 0.55);
+}
+
+.blog-article-body ol,
+.blog-article-body ul {
+  margin: 0 0 1.35em 1.25em;
+  padding: 0;
+}
+
+.blog-article-body li {
+  margin: 0 0 0.6em 0;
+  color: #070707;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.12rem;
+  line-height: 1.68;
+}
+
+.blog-article-body hr {
+  margin: 3rem 0;
+  border: none;
+  border-top: 1px solid rgba(7, 7, 7, 0.18);
+}
+
+/* Display equations: own block, span the full (wide) column, and scroll
+   horizontally only if a single line is still too long to fit. */
+.blog-eq {
+  margin: 1.8em 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.4rem;
+}
+
+.blog-eq mjx-container[display="true"] {
+  margin: 0;
+}
+
+/* slim, unobtrusive scrollbar for overflowing equations */
+.blog-eq {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(7, 7, 7, 0.35) transparent;
+}
+
+.blog-eq::-webkit-scrollbar {
+  height: 6px;
+}
+
+.blog-eq::-webkit-scrollbar-thumb {
+  background: rgba(7, 7, 7, 0.3);
+  border-radius: 3px;
+}
+
+/* The ELBO call-out box can also hold a long line on small screens */
+.blog-article-body blockquote {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Result callout (e.g. the ELBO): a contained box, on-brand red accent,
+   overriding the bleeding pull-quote treatment used elsewhere. */
+.blog-article-body blockquote.blog-result {
+  width: 100%;
+  max-width: 100%;
+  margin: 3rem 0;
+  padding: 1.85rem 1.75rem;
+  border-left: 0.3rem solid var(--bg);
+  background: rgba(227, 6, 19, 0.05);
+}
+
+.blog-article-body .blog-result-label {
+  margin: 0 0 0.85rem 0;
+  font-family: var(--type-3);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--bg);
+}
+
+.blog-article-body .blog-result p:not(.blog-result-label) {
+  font-family: var(--type-1);
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+.blog-article-body .blog-math-note {
+  margin-top: 2.5rem;
+  font-family: var(--type-3);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(7, 7, 7, 0.6);
 }
 
 .blog-next {
@@ -331,5 +463,64 @@
 
   .blog-article-body blockquote p {
     font-size: 1.8rem;
+  }
+
+  .blog-article-body p,
+  .blog-article-body li,
+  .blog-article-body h2,
+  .blog-article-body h3,
+  .blog-article-body .blog-eyebrow,
+  .blog-article-body .blog-math-note {
+    max-width: none;
+  }
+
+  .blog-article-body h2 {
+    margin: 2.5rem 0 1rem 0;
+    font-size: 1.45rem;
+  }
+
+  .blog-article-body h3 {
+    margin: 2rem 0 0.85rem 0;
+    font-size: 1.1rem;
+  }
+
+  .blog-article-body li {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  /* shrink display math a touch so fewer lines need horizontal scroll */
+  .blog-eq {
+    margin: 1.5em 0;
+  }
+
+  .blog-eq mjx-container[display="true"] {
+    font-size: 92%;
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-article {
+    padding: 3rem 0 5.5rem 0;
+  }
+
+  .blog-article-body p {
+    font-size: 1rem;
+  }
+
+  .blog-article-body .blog-lede {
+    font-size: 1.25rem;
+  }
+
+  .blog-article-body h2 {
+    font-size: 1.3rem;
+  }
+
+  .blog-article-body blockquote p {
+    font-size: 1.4rem;
+  }
+
+  .blog-eq mjx-container[display="true"] {
+    font-size: 86%;
   }
 }

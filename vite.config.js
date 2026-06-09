@@ -36,8 +36,10 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         blog: resolve(__dirname, "blog.html"),
+        esoterica: resolve(__dirname, "esoterica.html"),
+        maya: resolve(__dirname, "esoterica/maya.html"),
         academia: resolve(__dirname, "academia.html"),
-        maya: resolve(__dirname, "blog/maya.html"),
+        vaeElbo: resolve(__dirname, "academia/vae-elbo.html"),
         work: resolve(__dirname, "lab.html"),
         culture: resolve(__dirname, "work.html"),
         directors: resolve(__dirname, "project.html"),

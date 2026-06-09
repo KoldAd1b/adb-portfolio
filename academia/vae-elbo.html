@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The VAE ELBO — Adb Academia</title>
+    <meta name="author" content="Ahnaf Adib" />
+    <meta
+      name="description"
+      content="Deriving the variational autoencoder's evidence lower bound from information content, KL divergence, and an intractable posterior."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/site-icon.png" />
+
+    <link rel="stylesheet" href="/globals.css" />
+    <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/blog.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <!-- MathJax v3: inline \( \) and $ $, display \[ \] and $$ $$ -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["\\(", "\\)"],
+            ["$", "$"],
+          ],
+          displayMath: [
+            ["\\[", "\\]"],
+            ["$$", "$$"],
+          ],
+        },
+        options: {
+          skipHtmlTags: ["script", "noscript", "style", "textarea", "pre"],
+        },
+      };
+    </script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </head>
+  <body>
+    <div class="transition-grid">
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+      <div class="transition-block"></div>
+    </div>
+
+    <script>
+      if (sessionStorage.getItem("pageTransition") === "true") {
+        const grid = document.querySelector(".transition-grid");
+        if (grid) {
+          grid.style.backgroundColor = "var(--bg)";
+          grid.style.zIndex = "1000";
+          grid.style.pointerEvents = "auto";
+        }
+        const blocks = grid.querySelectorAll(".transition-block");
+        blocks.forEach((block) => {
+          block.style.opacity = "1";
+        });
+      }
+    </script>
+
+    <nav>
+      <div class="container">
+        <div class="nav-clock">
+          <p class="type-mono">18 <span>:</span> 25 CT</p>
+        </div>
+
+        <div class="nav-logo">
+          <a href="/" class="type-mono">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1000"
+              height="1000"
+              viewBox="0 0 1000 1000"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_1002_3)">
+                <path
+                  d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
+                  fill="black"
+                />
+                <path
+                  d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
+                  fill="black"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_1002_3">
+                  <rect width="1000" height="1000" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          </a>
+        </div>
+
+        <div class="nav-location">
+          <p class="type-mono">
+            <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
+          </p>
+        </div>
+      </div>
+    </nav>
+
+    <div class="menu-toggle-btn">
+      <div class="hamburger-bar"></div>
+      <div class="hamburger-bar"></div>
+    </div>
+
+    <div class="menu-overlay">
+      <div class="menu-bg">
+        <canvas id="menu-canvas"></canvas>
+      </div>
+
+      <div class="menu-overlay-nav">
+        <div class="close-btn">
+          <div class="close-btn-bar"></div>
+          <div class="close-btn-bar"></div>
+        </div>
+
+        <div class="menu-overlay-items">
+          <a
+            class="type-mono"
+            href="https://www.linkedin.com/in/ahnaf-adib369/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          <a
+            class="type-mono"
+            href="https://github.com/KoldAd1b"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+
+      <div class="menu-overlay-footer">
+        <a class="type-mono" href="/lab">Research Access</a>
+        <a class="type-mono" href="/esoterica">Esoterica</a>
+        <a class="type-mono" href="/academia">Academia</a>
+        <a class="type-mono" href="/contact">Get in Touch</a>
+      </div>
+
+      <div class="circular-menu">
+        <div class="joystick">
+          <ion-icon
+            name="grid-sharp"
+            class="center-icon center-main"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-up-sharp"
+            class="center-icon center-up"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-down-sharp"
+            class="center-icon center-down"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-back-sharp"
+            class="center-icon center-left"
+          ></ion-icon>
+          <ion-icon
+            name="chevron-forward-sharp"
+            class="center-icon center-right"
+          ></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="blog-hero blog-hero-post">
+        <img src="/lab/hero-visual.png" alt="" />
+        <div class="blog-hero-shade"></div>
+        <div class="container">
+          <div class="blog-hero-copy">
+            <a class="type-mono blog-back-link" href="/academia">Academia</a>
+            <p
+              class="type-mono"
+              data-animate-variant="flicker"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.2"
+            >
+              Machine Learning / Generative Models
+            </p>
+            <h1
+              data-animate-variant="diffuse"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.1"
+            >
+              The VAE<br />ELBO
+            </h1>
+            <p
+              class="blog-dek"
+              data-animate-variant="slide"
+              data-animate-type="lines"
+              data-animate-on-scroll="false"
+              data-animate-delay="0.75"
+            >
+              Where the evidence lower bound comes from — built up from
+              information, KL divergence, and an intractable posterior.
+            </p>
+          </div>
+          <div class="blog-hero-meta">
+            <p class="type-mono">Jun 8, 2026</p>
+            <p class="type-mono">9 min read</p>
+          </div>
+        </div>
+      </section>
+
+      <article class="blog-article">
+        <div class="container">
+          <aside class="blog-article-rail">
+            <p class="type-mono">Category</p>
+            <p>Variational Inference</p>
+            <p class="type-mono">Signal</p>
+            <p>The network predicts a mean and a variance. The ELBO tells it what to do with them.</p>
+          </aside>
+
+          <div class="blog-article-body">
+            <p class="blog-lede">
+              A variational autoencoder doesn't predict the data. It predicts a
+              <em>distribution</em> over a latent — a mean and a variance — and
+              is trained by maximizing a bound on the likelihood, because the
+              likelihood itself can't be computed. This is the whole chain, from
+              what the network outputs to the loss we minimize.
+            </p>
+
+            <h2>What we are actually building</h2>
+
+            <p>
+              A VAE has three pieces: a prior \(p(z) = \mathcal{N}(0, I)\) over a
+              latent variable \(z\), a decoder \(p(x \mid z)\) that turns a latent
+              back into data, and an encoder \(q(z \mid x)\) that maps data to a
+              distribution over latents. The encoder is the neural network, and
+              the first thing to be precise about is what it emits.
+            </p>
+
+            <p>
+              Given an input \(x\), the encoder does not output a latent vector.
+              It outputs the <strong>parameters of a Gaussian</strong> over
+              \(z\): a mean \(\mu(x)\) and a variance \(\sigma^2(x)\) (in
+              practice a log-variance, so it stays unconstrained). That is what
+              "the VAE predicts" — mean and variance:
+            </p>
+
+            <div class="blog-eq">\[ q(z \mid x) = \mathcal{N}\!\big(z;\; \mu(x),\, \sigma^2(x)\big). \]</div>
+
+            <p>
+              To actually get a latent we have to sample from that Gaussian — and
+              sampling is not differentiable, which would cut the gradient off
+              from \(\mu\) and \(\sigma\). The fix is the
+              <em>reparameterization trick</em>: draw the randomness from a fixed
+              standard Gaussian and push it through the predicted parameters,
+            </p>
+
+            <div class="blog-eq">\[ z = \mu(x) + \sigma(x) \odot \varepsilon, \qquad \varepsilon \sim \mathcal{N}(0, I). \]</div>
+
+            <p>
+              Now \(z\) is a deterministic, differentiable function of \(\mu\) and
+              \(\sigma\), with all the noise quarantined in \(\varepsilon\). The
+              full derivation of this "standard Gaussian to latent" map — and the
+              closed form of the KL it induces — is in the side note at the end.
+            </p>
+
+            <h2>Why \(p(x)\) is intractable</h2>
+
+            <p>
+              We would like to train by maximum likelihood: maximize \(\log
+              p(x)\). By the marginal,
+            </p>
+
+            <div class="blog-eq">\[ p(x) = \int p(x \mid z)\, p(z)\, dz, \]</div>
+
+            <p>
+              which is an integral over the <em>entire</em> latent space. For any
+              decoder expressive enough to be worth using, that integral has no
+              closed form and cannot be enumerated — \(z\) is continuous and
+              high-dimensional. And since Bayes' rule writes the posterior as
+            </p>
+
+            <div class="blog-eq">\[ p(z \mid x) = \frac{p(x \mid z)\, p(z)}{p(x)}, \]</div>
+
+            <p>
+              the intractable \(p(x)\) sits in its denominator, so the true
+              posterior is out of reach too. That is exactly why we introduced
+              \(q(z \mid x)\) to approximate it — and why we now need a way to
+              measure how good that approximation is.
+            </p>
+
+            <h2>Forward vs reverse KL</h2>
+
+            <p>
+              To measure the gap between \(q(z \mid x)\) and \(p(z \mid x)\) we
+              use a KL divergence — but the order matters, because KL is not
+              symmetric. There are two choices:
+            </p>
+
+            <ul>
+              <li>
+                <strong>Forward</strong>, \(D_{\mathrm{KL}}\big(p(z \mid x) \,\|\,
+                q(z \mid x)\big)\): an expectation over the <em>true</em>
+                posterior \(p(z \mid x)\) — the thing we just said we can't sample
+                from. A non-starter.
+              </li>
+              <li>
+                <strong>Reverse</strong>, \(D_{\mathrm{KL}}\big(q(z \mid x) \,\|\,
+                p(z \mid x)\big)\): an expectation over <em>our</em> encoder
+                \(q(z \mid x)\), which we built and can sample from cheaply via
+                the reparameterization trick.
+              </li>
+            </ul>
+
+            <p>
+              So we minimize the reverse KL — not only because it is the
+              tractable direction, but because it is the one that turns into a
+              quantity we can optimize. (Reverse KL is also mode-seeking: it
+              would rather concentrate \(q\) on one mode of the posterior than
+              smear probability where the posterior has none, which is the
+              well-behaved failure mode for a sampler.)
+            </p>
+
+            <h2>Information, then divergence</h2>
+
+            <p>
+              Before using KL it is worth seeing where it comes from. The
+              information content of an outcome under a density is \(I(x) = -\log
+              p(x)\): rarer outcomes carry more bits. If \(q\) is the distribution
+              we are using and \(p\) is the true one, the <em>excess</em>
+              information we pay per sample for using the wrong distribution is
+            </p>
+
+            <div class="blog-eq">\[ -\log q(x) - \big(-\log p(x)\big) = \log \frac{p(x)}{q(x)}, \]</div>
+
+            <p>
+              and averaging that surprise gap over the true distribution is the
+              Kullback–Leibler divergence,
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}(p \,\|\, q) = \int p(x)\, \log \frac{p(x)}{q(x)}\, dx \;\ge\; 0, \]</div>
+
+            <p>
+              zero only when the two distributions agree almost everywhere. That
+              single non-negativity is the entire engine of what follows.
+            </p>
+
+            <h2>The derivation</h2>
+
+            <p>
+              Write the reverse KL between our encoder and the true posterior,
+              and substitute Bayes' rule for \(p(z \mid x)\):
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = \int q(z \mid x)\, \log \frac{q(z \mid x)}{p(z \mid x)}\, dz. \]</div>
+
+            <p>
+              Replacing \(p(z \mid x) = \dfrac{p(x \mid z)\, p(z)}{p(x)}\) turns
+              the ratio inside the log into \(\dfrac{q(z \mid x)\, p(x)}{p(x \mid
+              z)\, p(z)}\), so
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = \int q(z \mid x)\, \log \frac{q(z \mid x)\, p(x)}{p(x \mid z)\, p(z)}\, dz. \]</div>
+
+            <p>
+              Split the logarithm and pull \(\log p(x)\) out of the integral — it
+              does not depend on \(z\), and \(\int q(z \mid x)\, dz = 1\):
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = -\underbrace{\int q(z \mid x)\, \log \frac{p(x \mid z)\, p(z)}{q(z \mid x)}\, dz}_{\textstyle \mathcal{L}} \; + \; \log p(x). \]</div>
+
+            <h2>What the ELBO is, and why we maximize it</h2>
+
+            <p>
+              Call that integral \(\mathcal{L}\). Rearranging the line above is an
+              <em>exact identity</em> — nothing has been approximated:
+            </p>
+
+            <div class="blog-eq">\[ \log p(x) = \mathcal{L} + D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big). \]</div>
+
+            <p>
+              The KL term is non-negative, so \(\mathcal{L} \le \log p(x)\):
+              \(\mathcal{L}\) is a lower bound on the log evidence — the
+              <em>evidence lower bound</em>. Expanding it into its two pieces,
+            </p>
+
+            <div class="blog-eq">\[ \mathcal{L} = \int q(z \mid x)\, \log p(x \mid z)\, dz + \int q(z \mid x)\, \log \frac{p(z)}{q(z \mid x)}\, dz, \]</div>
+
+            <blockquote class="blog-result">
+              <p class="type-mono blog-result-label">The ELBO</p>
+              <p>
+                \( \mathcal{L} = \mathbb{E}_{q(z \mid x)}\!\big[\log p(x \mid
+                z)\big] - D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z)\big) \le
+                \log p(x). \)
+              </p>
+            </blockquote>
+
+            <p>
+              We maximize \(\mathcal{L}\) because \(\log p(x)\) — the thing we
+              truly want — is fixed and unreachable, while the gap to it is
+              precisely \(D_{\mathrm{KL}}(q \,\|\, p(z \mid x)) \ge 0\). Pushing
+              \(\mathcal{L}\) up therefore does double duty: it drives a proxy for
+              the likelihood upward <em>and</em> squeezes that gap shut, pulling
+              \(q(z \mid x)\) toward the true posterior. The bound is tight
+              exactly when the encoder recovers \(p(z \mid x)\).
+            </p>
+
+            <h2>From maximizing the ELBO to minimizing a loss</h2>
+
+            <p>
+              Optimizers minimize, so the training loss is just the negative
+              ELBO:
+            </p>
+
+            <div class="blog-eq">\[ \mathcal{L}_{\text{VAE}} = -\,\mathbb{E}_{q(z \mid x)}\!\big[\log p(x \mid z)\big] + D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z)\big). \]</div>
+
+            <p>
+              The two terms are exactly the two halves of the autoencoder. The
+              first is <strong>reconstruction</strong>: sample \(z\) with the
+              reparameterization trick, decode it, and penalize a decoder that
+              makes the original \(x\) unlikely — for a Gaussian decoder this is
+              mean-squared error, for a Bernoulli decoder it is binary
+              cross-entropy. The second is <strong>regularization</strong>: it
+              pulls the predicted \(\mu, \sigma\) toward the standard-normal prior
+              so the latent space stays smooth and samplable. Minimizing this loss
+              maximizes the ELBO, which maximizes a lower bound on \(\log p(x)\).
+            </p>
+
+            <hr />
+
+            <h2>Side note — the Gaussian moving to the latents</h2>
+
+            <p>
+              Two loose ends from above, both about the Gaussian the encoder
+              predicts.
+            </p>
+
+            <h3>The reparameterization trick</h3>
+
+            <p>
+              We need samples \(z \sim \mathcal{N}(\mu, \sigma^2)\), but we also
+              need gradients to flow back into \(\mu\) and \(\sigma\). A location–
+              scale Gaussian factors cleanly: if \(\varepsilon \sim
+              \mathcal{N}(0, I)\), then
+            </p>
+
+            <div class="blog-eq">\[ z = \mu + \sigma \odot \varepsilon \;\sim\; \mathcal{N}(\mu, \sigma^2). \]</div>
+
+            <p>
+              The stochastic part is the fixed, parameter-free \(\varepsilon\);
+              \(\mu\) and \(\sigma\) enter only through deterministic, smooth
+              operations. So \(\partial z / \partial \mu = 1\) and \(\partial z /
+              \partial \sigma = \varepsilon\), and the expectation
+              \(\mathbb{E}_{q}[\,\cdot\,]\) becomes
+              \(\mathbb{E}_{\varepsilon \sim \mathcal{N}(0,I)}[\,\cdot\,]\), which
+              we estimate by Monte Carlo and differentiate term by term. The
+              Gaussian noise is, quite literally, transported into the latent.
+            </p>
+
+            <h3>Closed form of the KL term</h3>
+
+            <p>
+              Because both the encoder \(q = \mathcal{N}(\mu, \sigma^2)\) and the
+              prior \(p = \mathcal{N}(0, 1)\) are Gaussian, the regularizer needs
+              no sampling. In one dimension,
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}(q \,\|\, p) = \mathbb{E}_q\big[\log q - \log p\big] = \mathbb{E}_q\!\left[ -\tfrac{1}{2}\log \sigma^2 - \frac{(z-\mu)^2}{2\sigma^2} + \frac{z^2}{2} \right]. \]</div>
+
+            <p>
+              Using \(\mathbb{E}_q[(z-\mu)^2] = \sigma^2\) and \(\mathbb{E}_q[z^2]
+              = \mu^2 + \sigma^2\),
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}(q \,\|\, p) = -\tfrac{1}{2}\log \sigma^2 - \tfrac{1}{2} + \tfrac{1}{2}\big(\mu^2 + \sigma^2\big) = \tfrac{1}{2}\big(\mu^2 + \sigma^2 - \log \sigma^2 - 1\big). \]</div>
+
+            <p>
+              Summed over a diagonal latent of dimension \(J\), this is the term
+              that actually appears in the loss,
+            </p>
+
+            <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z)\big) = -\tfrac{1}{2} \sum_{j=1}^{J} \big(1 + \log \sigma_j^2 - \mu_j^2 - \sigma_j^2\big), \]</div>
+
+            <p>
+              a closed-form function of exactly the mean and variance the network
+              predicts — which is where this note began.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <section class="blog-next">
+        <div class="container">
+          <p class="type-mono">[ Academia ]</p>
+          <a href="/academia">
+            <h2>Return to Academia</h2>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-row">
+            <div class="footer-col">
+              <h2>Adb</h2>
+            </div>
+
+            <div class="footer-col">
+              <div class="footer-sub-col">
+                <a href="/"><h3>Index</h3></a>
+                <a href="/lab"><h3>Research</h3></a>
+                <a href="/work"><h3>Archive</h3></a>
+                <a href="/esoterica"><h3>Esoterica</h3></a>
+                <a href="/academia"><h3>Academia</h3></a>
+                <a href="/lab#papers"><h3>Papers</h3></a>
+                <a href="/contact"><h3>Connect</h3></a>
+              </div>
+
+              <div class="footer-sub-col">
+                <a
+                  href="https://github.com/KoldAd1b"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >GitHub</a
+                >
+                <a
+                  href="https://www.linkedin.com/in/ahnaf-adib369/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >LinkedIn</a
+                >
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Resume</a
+                >
+                <a
+                  href="mailto:ahnafadib7546@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Email</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-row">
+            <p class="type-mono">The human in the loop</p>
+            <p class="type-mono">[ Python / TypeScript / Multi-Agent ML ]</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <svg
+      viewBox="0 0 0 0"
+      aria-hidden="true"
+      style="position: absolute; width: 0; height: 0; pointer-events: none"
+    >
+      <defs>
+        <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140"
+          ></feColorMatrix>
+        </filter>
+      </defs>
+    </svg>
+
+    <script type="module" src="/js/lenis-scroll.js"></script>
+    <script type="module" src="/js/transition.js"></script>
+    <script type="module" src="/js/nav.js"></script>
+    <script type="module" src="/js/menu.js"></script>
+    <script type="module" src="/js/animated-copy.js"></script>
+    <script type="module" src="/js/footer.js"></script>
+  </body>
+</html>

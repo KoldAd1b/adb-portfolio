@@ -4,8 +4,10 @@
   "rewrites": [
     { "source": "/lab", "destination": "/lab.html" },
     { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/esoterica", "destination": "/esoterica.html" },
+    { "source": "/esoterica/maya", "destination": "/esoterica/maya.html" },
     { "source": "/academia", "destination": "/academia.html" },
-    { "source": "/blog/maya", "destination": "/blog/maya.html" },
+    { "source": "/academia/vae-elbo", "destination": "/academia/vae-elbo.html" },
     { "source": "/work", "destination": "/work.html" },
     { "source": "/project", "destination": "/case/voice-agent.html" },
     { "source": "/case/voice-agent", "destination": "/case/voice-agent.html" },

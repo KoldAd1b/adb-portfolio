@@ -6,3 +6,9 @@ dist/
 .env
 .env.*
 !.env.example
+CLAUDE.md
+
+# scratch derivation photos in repo root (not site assets)
+/Image*.jpeg
+/Image*.jpg
+/Image*.png
