@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The VAE ELBO — Adb Academia</title>
+    <title>The VAE ELBO | Adb Academia</title>
     <meta name="author" content="Ahnaf Adib" />
     <meta
       name="description"
@@ -220,8 +220,9 @@
               data-animate-on-scroll="false"
               data-animate-delay="0.75"
             >
-              Where the evidence lower bound comes from — built up from
-              information, KL divergence, and an intractable posterior.
+              You can't maximize a likelihood you can't compute. So you build a
+              bound you <em>can</em> compute and chase that instead. Here's where
+              the bound comes from, start to finish.
             </p>
           </div>
           <div class="blog-hero-meta">
@@ -243,13 +244,15 @@
           <div class="blog-article-body">
             <p class="blog-lede">
               A variational autoencoder doesn't predict the data. It predicts a
-              <em>distribution</em> over a latent — a mean and a variance — and
-              is trained by maximizing a bound on the likelihood, because the
-              likelihood itself can't be computed. This is the whole chain, from
-              what the network outputs to the loss we minimize.
+              <em>distribution</em> over a latent (a mean and a variance), and
+              then trains against a number it can never actually see. The
+              likelihood is out of reach, so the whole method is a clever way
+              around that one problem: bound what you can't compute, then close
+              the gap. It's a beautiful little maneuver, and this post walks the
+              whole chain, from what the network outputs to the loss we minimize.
             </p>
 
-            <h2>What we are actually building</h2>
+            <h2>So what does the network actually output?</h2>
 
             <p>
               A VAE has three pieces: a prior \(p(z) = \mathcal{N}(0, I)\) over a
@@ -264,13 +267,13 @@
               It outputs the <strong>parameters of a Gaussian</strong> over
               \(z\): a mean \(\mu(x)\) and a variance \(\sigma^2(x)\) (in
               practice a log-variance, so it stays unconstrained). That is what
-              "the VAE predicts" — mean and variance:
+              "the VAE predicts", mean and variance:
             </p>
 
             <div class="blog-eq">\[ q(z \mid x) = \mathcal{N}\!\big(z;\; \mu(x),\, \sigma^2(x)\big). \]</div>
 
             <p>
-              To actually get a latent we have to sample from that Gaussian — and
+              To actually get a latent we have to sample from that Gaussian, and
               sampling is not differentiable, which would cut the gradient off
               from \(\mu\) and \(\sigma\). The fix is the
               <em>reparameterization trick</em>: draw the randomness from a fixed
@@ -282,11 +285,11 @@
             <p>
               Now \(z\) is a deterministic, differentiable function of \(\mu\) and
               \(\sigma\), with all the noise quarantined in \(\varepsilon\). The
-              full derivation of this "standard Gaussian to latent" map — and the
-              closed form of the KL it induces — is in the side note at the end.
+              full derivation of this "standard Gaussian to latent" map (and the
+              closed form of the KL it induces) is in the side note at the end.
             </p>
 
-            <h2>Why \(p(x)\) is intractable</h2>
+            <h2>The likelihood is out of reach (here's why)</h2>
 
             <p>
               We would like to train by maximum likelihood: maximize \(\log
@@ -298,7 +301,7 @@
             <p>
               which is an integral over the <em>entire</em> latent space. For any
               decoder expressive enough to be worth using, that integral has no
-              closed form and cannot be enumerated — \(z\) is continuous and
+              closed form and cannot be enumerated: \(z\) is continuous and
               high-dimensional. And since Bayes' rule writes the posterior as
             </p>
 
@@ -307,15 +310,15 @@
             <p>
               the intractable \(p(x)\) sits in its denominator, so the true
               posterior is out of reach too. That is exactly why we introduced
-              \(q(z \mid x)\) to approximate it — and why we now need a way to
+              \(q(z \mid x)\) to approximate it, and why we now need a way to
               measure how good that approximation is.
             </p>
 
-            <h2>Forward vs reverse KL</h2>
+            <h2>Two ways to measure the gap, only one is usable</h2>
 
             <p>
               To measure the gap between \(q(z \mid x)\) and \(p(z \mid x)\) we
-              use a KL divergence — but the order matters, because KL is not
+              use a KL divergence, but the order matters, because KL is not
               symmetric. There are two choices:
             </p>
 
@@ -323,7 +326,7 @@
               <li>
                 <strong>Forward</strong>, \(D_{\mathrm{KL}}\big(p(z \mid x) \,\|\,
                 q(z \mid x)\big)\): an expectation over the <em>true</em>
-                posterior \(p(z \mid x)\) — the thing we just said we can't sample
+                posterior \(p(z \mid x)\), the thing we just said we can't sample
                 from. A non-starter.
               </li>
               <li>
@@ -335,7 +338,7 @@
             </ul>
 
             <p>
-              So we minimize the reverse KL — not only because it is the
+              So we minimize the reverse KL, not only because it is the
               tractable direction, but because it is the one that turns into a
               quantity we can optimize. (Reverse KL is also mode-seeking: it
               would rather concentrate \(q\) on one mode of the posterior than
@@ -343,7 +346,7 @@
               well-behaved failure mode for a sampler.)
             </p>
 
-            <h2>Information, then divergence</h2>
+            <h2>Where KL even comes from</h2>
 
             <p>
               Before using KL it is worth seeing where it comes from. The
@@ -357,7 +360,7 @@
 
             <p>
               and averaging that surprise gap over the true distribution is the
-              Kullback–Leibler divergence,
+              Kullback-Leibler divergence,
             </p>
 
             <div class="blog-eq">\[ D_{\mathrm{KL}}(p \,\|\, q) = \int p(x)\, \log \frac{p(x)}{q(x)}\, dx \;\ge\; 0, \]</div>
@@ -367,7 +370,7 @@
               single non-negativity is the entire engine of what follows.
             </p>
 
-            <h2>The derivation</h2>
+            <h2>Now the derivation</h2>
 
             <p>
               Write the reverse KL between our encoder and the true posterior,
@@ -385,24 +388,24 @@
             <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = \int q(z \mid x)\, \log \frac{q(z \mid x)\, p(x)}{p(x \mid z)\, p(z)}\, dz. \]</div>
 
             <p>
-              Split the logarithm and pull \(\log p(x)\) out of the integral — it
+              Split the logarithm and pull \(\log p(x)\) out of the integral, it
               does not depend on \(z\), and \(\int q(z \mid x)\, dz = 1\):
             </p>
 
             <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = -\underbrace{\int q(z \mid x)\, \log \frac{p(x \mid z)\, p(z)}{q(z \mid x)}\, dz}_{\textstyle \mathcal{L}} \; + \; \log p(x). \]</div>
 
-            <h2>What the ELBO is, and why we maximize it</h2>
+            <h2>What the ELBO is, and why pushing it up helps twice</h2>
 
             <p>
               Call that integral \(\mathcal{L}\). Rearranging the line above is an
-              <em>exact identity</em> — nothing has been approximated:
+              <em>exact identity</em>, nothing has been approximated:
             </p>
 
             <div class="blog-eq">\[ \log p(x) = \mathcal{L} + D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big). \]</div>
 
             <p>
               The KL term is non-negative, so \(\mathcal{L} \le \log p(x)\):
-              \(\mathcal{L}\) is a lower bound on the log evidence — the
+              \(\mathcal{L}\) is a lower bound on the log evidence, the
               <em>evidence lower bound</em>. Expanding it into its two pieces,
             </p>
 
@@ -418,8 +421,8 @@
             </blockquote>
 
             <p>
-              We maximize \(\mathcal{L}\) because \(\log p(x)\) — the thing we
-              truly want — is fixed and unreachable, while the gap to it is
+              We maximize \(\mathcal{L}\) because \(\log p(x)\) (the thing we
+              truly want) is fixed and unreachable, while the gap to it is
               precisely \(D_{\mathrm{KL}}(q \,\|\, p(z \mid x)) \ge 0\). Pushing
               \(\mathcal{L}\) up therefore does double duty: it drives a proxy for
               the likelihood upward <em>and</em> squeezes that gap shut, pulling
@@ -427,7 +430,7 @@
               exactly when the encoder recovers \(p(z \mid x)\).
             </p>
 
-            <h2>From maximizing the ELBO to minimizing a loss</h2>
+            <h2>Flipping it into a loss</h2>
 
             <p>
               Optimizers minimize, so the training loss is just the negative
@@ -440,7 +443,7 @@
               The two terms are exactly the two halves of the autoencoder. The
               first is <strong>reconstruction</strong>: sample \(z\) with the
               reparameterization trick, decode it, and penalize a decoder that
-              makes the original \(x\) unlikely — for a Gaussian decoder this is
+              makes the original \(x\) unlikely: for a Gaussian decoder this is
               mean-squared error, for a Bernoulli decoder it is binary
               cross-entropy. The second is <strong>regularization</strong>: it
               pulls the predicted \(\mu, \sigma\) toward the standard-normal prior
@@ -450,18 +453,27 @@
 
             <hr />
 
-            <h2>Side note — the Gaussian moving to the latents</h2>
+            <h2>Side note: moving the Gaussian into the latents</h2>
 
             <p>
               Two loose ends from above, both about the Gaussian the encoder
               predicts.
             </p>
 
-            <h3>The reparameterization trick</h3>
+            <h3>The reparameterization trick (the pretty part)</h3>
+
+            <p>
+              Here's the move I think is genuinely beautiful. You can't backprop
+              through a coin flip, so you don't even try. You pull the randomness
+              out into a fixed standard Gaussian, sample <em>that</em>, and push
+              it through your predicted mean and variance. The noise stays
+              quarantined, the gradients flow, and nothing about the network had
+              to go deterministic. Simple, and a little bit magic.
+            </p>
 
             <p>
               We need samples \(z \sim \mathcal{N}(\mu, \sigma^2)\), but we also
-              need gradients to flow back into \(\mu\) and \(\sigma\). A location–
+              need gradients to flow back into \(\mu\) and \(\sigma\). A location-
               scale Gaussian factors cleanly: if \(\varepsilon \sim
               \mathcal{N}(0, I)\), then
             </p>
@@ -505,7 +517,11 @@
 
             <p>
               a closed-form function of exactly the mean and variance the network
-              predicts — which is where this note began.
+              predicts, which is where this note began.
+            </p>
+
+            <p>
+              It took me over ten tries to actually derive this from memory.
             </p>
           </div>
         </div>
