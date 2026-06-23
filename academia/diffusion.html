@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Five Views of Diffusion | Adb Academia</title>
+  <meta name="author" content="Ahnaf Adib" />
+  <meta name="description"
+    content="One diffusion process seen five ways: the marginal density, the vector field, the score, the SDE, and the probability-flow ODE, built up from a single setup." />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" type="image/png" href="/site-icon.png" />
+
+  <link rel="stylesheet" href="/globals.css" />
+  <link rel="stylesheet" href="/css/nav.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/blog.css" />
+  <link rel="stylesheet" href="/css/footer.css" />
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- MathJax v3: inline \( \) and $ $, display \[ \] and $$ $$ -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [
+          ["\\(", "\\)"],
+          ["$", "$"],
+        ],
+        displayMath: [
+          ["\\[", "\\]"],
+          ["$$", "$$"],
+        ],
+      },
+      options: {
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre"],
+      },
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <div class="transition-grid">
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+  </div>
+
+  <script>
+    if (sessionStorage.getItem("pageTransition") === "true") {
+      const grid = document.querySelector(".transition-grid");
+      if (grid) {
+        grid.style.backgroundColor = "var(--bg)";
+        grid.style.zIndex = "1000";
+        grid.style.pointerEvents = "auto";
+      }
+      const blocks = grid.querySelectorAll(".transition-block");
+      blocks.forEach((block) => {
+        block.style.opacity = "1";
+      });
+    }
+  </script>
+
+  <nav>
+    <div class="container">
+      <div class="nav-clock">
+        <p class="type-mono">18 <span>:</span> 25 CT</p>
+      </div>
+
+      <div class="nav-logo">
+        <a href="/" class="type-mono">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" fill="none">
+            <g clip-path="url(#clip0_1002_3)">
+              <path
+                d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
+                fill="black" />
+              <path
+                d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
+                fill="black" />
+            </g>
+            <defs>
+              <clipPath id="clip0_1002_3">
+                <rect width="1000" height="1000" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </a>
+      </div>
+
+      <div class="nav-location">
+        <p class="type-mono">
+          <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
+        </p>
+      </div>
+    </div>
+  </nav>
+
+  <div class="menu-toggle-btn">
+    <div class="hamburger-bar"></div>
+    <div class="hamburger-bar"></div>
+  </div>
+
+  <div class="menu-overlay">
+    <div class="menu-bg">
+      <canvas id="menu-canvas"></canvas>
+    </div>
+
+    <div class="menu-overlay-nav">
+      <div class="close-btn">
+        <div class="close-btn-bar"></div>
+        <div class="close-btn-bar"></div>
+      </div>
+
+      <div class="menu-overlay-items">
+        <a class="type-mono" href="https://www.linkedin.com/in/ahnaf-adib369/" target="_blank"
+          rel="noopener noreferrer">LinkedIn</a>
+        <a class="type-mono" href="https://github.com/KoldAd1b" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+
+    <div class="menu-overlay-footer">
+      <a class="type-mono" href="/lab">Research Access</a>
+      <a class="type-mono" href="/esoterica">Esoterica</a>
+      <a class="type-mono" href="/academia">Academia</a>
+      <a class="type-mono" href="/contact">Get in Touch</a>
+    </div>
+
+    <div class="circular-menu">
+      <div class="joystick">
+        <ion-icon name="grid-sharp" class="center-icon center-main"></ion-icon>
+        <ion-icon name="chevron-up-sharp" class="center-icon center-up"></ion-icon>
+        <ion-icon name="chevron-down-sharp" class="center-icon center-down"></ion-icon>
+        <ion-icon name="chevron-back-sharp" class="center-icon center-left"></ion-icon>
+        <ion-icon name="chevron-forward-sharp" class="center-icon center-right"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="blog-hero blog-hero-post">
+      <img src="/lab/hero-visual.png" alt="" />
+      <div class="blog-hero-shade"></div>
+      <div class="container">
+        <div class="blog-hero-copy">
+          <a class="type-mono blog-back-link" href="/academia">Academia</a>
+          <p class="type-mono" data-animate-variant="flicker" data-animate-on-scroll="false" data-animate-delay="0.2">
+            Machine Learning / Diffusion Models
+          </p>
+          <h1 data-animate-variant="diffuse" data-animate-on-scroll="false" data-animate-delay="0.1">
+            Five Views of<br />Diffusion
+          </h1>
+          <p class="blog-dek" data-animate-variant="slide" data-animate-type="lines" data-animate-on-scroll="false"
+            data-animate-delay="0.75">
+            One process, one density morphing data into noise, and the five
+            objects the whole field uses to get a grip on it: the distribution,
+            the vector field, the score, the SDE, and the probability-flow ODE.
+          </p>
+        </div>
+        <div class="blog-hero-meta">
+          <p class="type-mono">Draft</p>
+          <p class="type-mono">Long read</p>
+        </div>
+      </div>
+    </section>
+
+    <article class="blog-article">
+      <div class="container">
+        <aside class="blog-article-rail">
+          <p class="type-mono">Five views</p>
+          <p>Distribution, vector field, score, SDE, probability-flow ODE.</p>
+          <p class="type-mono">One object</p>
+          <p>\( p_t(x) \)</p>
+          <p class="type-mono">Signal</p>
+          <p>Track the density. Everything else is a handle on it.</p>
+        </aside>
+
+        <div class="blog-article-body">
+          <p class="blog-lede">
+            Diffusion models have a strange and wonderful property: there are at
+            least five different ways to explain them, and each one sounds like a
+            completely different idea. One account talks about gradually denoising
+            an image. Another writes down a stochastic differential equation. A
+            third regresses a velocity field. A fourth is all about the gradient
+            of a log-density. A fifth solves an ordinary differential equation.
+            All this to just move probability distributions ... (I am underplaying its salience but hey)
+          </p>
+
+          <p>Things of that nature</p>
+
+          <ul>
+            <li>
+              the <strong>distribution</strong> \( p_t(x) \): the data, blurred
+              toward noise. The object every other view describes.
+            </li>
+            <li>
+              the <strong>vector field</strong> \( u_t(x) \): the velocity that
+              flows the distribution along its path.
+            </li>
+            <li>
+              the <strong>score</strong> \( \nabla \log p_t(x) \): the gradient
+              that points back toward the data.
+            </li>
+            <li>
+              the <strong>SDE</strong> \( dx = f\,dt + g\,dW \): the noising as a
+              continuous random process, reversible into a generator.
+            </li>
+            <li>
+              the <strong>probability-flow ODE</strong>: the same path with
+              no randomness (because we like determinism)
+            </li>
+          </ul>
+
+          <h2>What we are actually trying to do</h2>
+
+          <p>
+            Start from the goal, because it is easy to lose. We have a pile of
+            samples, images say, or molecules, or audio, drawn from some
+            distribution \( p_{\text{data}} \). We do not have a formula for it;
+            we only have examples. We would like to produce <em>new</em> samples
+            that look like they came from the same place. That is the whole job
+            of a generative model: turn a finite pile of examples into a machine
+            that mimics those examples
+          </p>
+
+          <p>
+            The trouble is that \( p_{\text{data}} \) lives in a brutally
+            high-dimensional space and concentrates on a thin, complicated sliver
+            of it. The set of pixel arrangements that happen to look like a face
+            is vanishingly small inside the set of all pixel arrangements. We
+            cannot write that distribution down, we cannot integrate against it,
+            and we certainly cannot sample it directly. But we have many ways to approximate.
+          </p>
+
+          <h2>A bridge of noise</h2>
+
+          <p>
+            Here is the idea that makes diffusion work, and it is quite simple. There is exactly one distribution in
+            high
+            dimensions we can sample from with our eyes closed: an isotropic
+            Gaussian \( \mathcal{N}(0, I) \). So we do not attack \(
+            p_{\text{data}} \) head on at all. We build a <em>bridge</em> from it
+            to that Gaussian, and then we learn to walk the bridge backward. That
+            is the whole trick. Everything after this is just math.
+          </p>
+
+          <p>
+            The bridge is noise. Take a clean sample \( x_0 \sim p_{\text{data}}
+            \) and corrupt it a little at a time, a touch of Gaussian noise, then
+            a touch more, until every trace of the original is gone and what
+            remains is indistinguishable from a draw of \( \mathcal{N}(0, I) \).
+            Index the corruption by a time \( t \) from \( 0 \) to \( 1 \), and at
+            each \( t \) you get a noisier version \( x_t \):
+          </p>
+
+          <div class="blog-eq">\[ x_t = \alpha_t x_0 + \sigma_t\, \varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,
+            I), \]</div>
+
+          <p>
+            with two schedules: \( \alpha_t \), the amount of signal that
+            survives, sliding from \( 1 \) down to \( 0 \), and \( \sigma_t \),
+            the noise mixed in, climbing from \( 0 \) up to \( 1 \). At \( t = 0
+            \) you have \( x_0 \) untouched; at \( t = 1 \) the signal is gone and
+            only noise remains. (A common choice keeps \( \alpha_t^2 + \sigma_t^2
+            = 1 \) so the total variance never changes, the "variance-preserving"
+            path, which is why the corrupted samples stay the same size instead of
+            blowing up.) This one equation is the ground every view stands on.
+          </p>
+
+          <h2>View one: the density that morphs data into noise</h2>
+
+          <p>
+            Stop watching one trajectory and watch the whole population. Fix a
+            time \( t \), push <em>every</em> data point through the same noising,
+            and you get an entire distribution of corrupted samples. That
+            distribution is our first object, \( p_t \):
+          </p>
+
+          <div class="blog-eq">\[ p_t(x) = \int p_t(x \mid x_0)\, p_{\text{data}}(x_0)\, dx_0. \]</div>
+
+          <p>
+            It interpolates between the two distributions we care about. At \( t =
+            0 \), \( p_0 = p_{\text{data}} \), the thing we want. At \( t = 1 \),
+            \( p_1 \approx \mathcal{N}(0, I) \), the thing we can sample. The
+            family \( \{p_t\} \) is a continuous transformation from one to the other, a
+            slow one from data into noise.
+          </p>
+
+          <p>
+            We did not reach for Gaussian noise just because. The advantage is that
+            the <em>conditional</em> law of \( x_t \) given a specific \( x_0 \)
+            is itself a clean Gaussian,
+          </p>
+
+          <div class="blog-eq">\[ p_t(x \mid x_0) = \mathcal{N}\!\big(x;\; \alpha_t x_0,\, \sigma_t^2 I\big), \]</div>
+
+          <p>
+            centered on the shrinking signal \( \alpha_t x_0 \), spread by the
+            growing noise \( \sigma_t \). Two gifts fall out of this, and we cherry pick them again and again.
+            We can sample any \( x_t \) in a single
+            shot, no stepping through time, just jump straight to whatever \( t \)
+            we want. And everything about the
+            conditional, its density, its gradient, its moments, is closed-form,
+            because it is only a Gaussian. (That location-scale move, pushing the
+            randomness into a fixed \( \varepsilon \) so gradients still flow, is
+            the reparameterization trick from the
+            <a href="/academia/vae-elbo">VAE</a>.)
+          </p>
+
+          <p>
+            Everything downstream now feels intuitive. The marginal \( p_t \) is a <em>mixture</em>: take every
+            data point, replace it with a Gaussian blob centered near it of
+            width \( \sigma_t \), and add the blobs up. At small \( t \) the blobs
+            are tiny and sit on the data, so \( p_t \) looks like the sharp, spiky
+            data distribution. As \( t \) grows the blobs widen and overlap,
+            filling the gaps and smoothing the spikes into hills, until by \( t =
+            1 \) they merge into one broad mound. That is the whole forward
+            process: a gradual blur filter.
+          </p>
+
+          <p>
+            And now the catch, the one the entire field is organized around. The
+            conditional is a friendly Gaussian, but the marginal \( p_t(x) \) is
+            that mixture over <em>every</em> data point at once:
+          </p>
+
+          <div class="blog-eq">\[ p_t(x) = \int \mathcal{N}\!\big(x;\; \alpha_t x_0,\, \sigma_t^2 I\big)\,
+            p_{\text{data}}(x_0)\, dx_0. \]</div>
+
+          <p>
+            To evaluate it at a single \( x \) you would integrate against \(
+            p_{\text{data}} \), the one thing we cannot do. In mathematics, we call it intractable. So we land in the
+            strange situation that defines the subject: we can <em>draw</em> from
+            \( p_t \) for free, by noising a random data point, and we can
+            <em>evaluate</em> \( p_t(x) \) essentially never. Fitting a normalized
+            model \( q_\theta \approx p_t \) does not save us either, because
+            its normalizing constant \( Z_\theta = \int q_\theta \) is the same
+            intractable integral. The density itself, as a
+            number, is the wrong target. Every remaining view is a way of tracking
+            something <em>attached</em> to \( p_t \) that we can do without the
+            normalizer.
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">The crux</p>
+            <p>
+              \( x_t = \alpha_t x_0 + \sigma_t \varepsilon \) samples \( p_t \)
+              instantly, yet \( p_t(x) = \int \mathcal{N}(x;\, \alpha_t x_0,\,
+              \sigma_t^2 I)\, p_{\text{data}}(x_0)\, dx_0 \) stays out of reach.
+              Free to sample, impossible to evaluate.
+            </p>
+          </blockquote>
+
+          <h2>View two: the velocity that carries the density</h2>
+
+          <p>
+            Picture the family \( p_t \) as frames of a film: data at the start,
+            noise at the end. A film implies motion, and motion implies a
+            velocity. The vector field \( u_t(x) \) is exactly that: at each point
+            in space and each instant, it says which way probability mass is
+            moving and how fast. Get this field and generation becomes almost
+            embarrassingly simple, you just follow the arrows.
+          </p>
+
+          <p>
+            If we transport mass with velocity \( u_t(x) \), the density cannot
+            change however it pleases; it has to conserve probability. That
+            bookkeeping is the continuity equation,
+          </p>
+
+          <div class="blog-eq">\[ \partial_t p_t(x) + \nabla \cdot \big(p_t(x)\, u_t(x)\big) = 0, \]</div>
+
+          <p>
+            which reads: the rate density piles up at a point equals the net mass
+            flowing in. Any field obeying this drags \( p_0 \) through the exact
+            frames \( p_t \). So if we can find \( u_t \), we generate by solving
+            an ordinary differential equation,
+          </p>
+
+          <div class="blog-eq">\[ \frac{dx}{dt} = u_t(x), \]</div>
+
+          <p>
+            starting from a noise sample at \( t = 1 \) and integrating back down
+            to \( t = 0 \). No randomness. Just follow the field home.
+          </p>
+
+          <p>
+            How do we get \( u_t \)? Same trick as everywhere in diffusion: one
+            data point is easy, the whole distribution is hard. Condition on a
+            clean \( x_0 \). That point rides the curve \( x_t = \alpha_t x_0 +
+            \sigma_t \varepsilon \) for a frozen \( \varepsilon \), and its
+            velocity is just the time derivative. Substituting \( \varepsilon = (x
+            - \alpha_t x_0)/\sigma_t \),
+          </p>
+
+          <div class="blog-eq">\[ u_t(x \mid x_0) = \dot\alpha_t x_0 + \dot\sigma_t\, \varepsilon = \dot\alpha_t x_0 +
+            \frac{\dot\sigma_t}{\sigma_t}\big(x - \alpha_t x_0\big). \]</div>
+
+          <p>
+            Completely explicit. The trouble is that this is the velocity for
+            <em>one</em> data point, and many points can send mass through the
+            same \( x \) at time \( t \). The true field is the posterior average
+            over all of them,
+          </p>
+
+          <div class="blog-eq">\[ u_t(x) = \mathbb{E}\big[\, u_t(x \mid x_0) \,\big|\, x_t = x \,\big], \]</div>
+
+          <p>
+            an expectation over \( p(x_0 \mid x_t) \), as intractable as the
+            marginal density itself. So we do not compute it. We regress against
+            the easy conditional target and let least squares do the averaging:
+          </p>
+
+          <div class="blog-eq">\[ \mathcal{L}(\theta) = \mathbb{E}_{t,\, x_0,\, \varepsilon}\, \big\| v_\theta(x_t, t) -
+            u_t(x_t \mid x_0) \big\|^2. \]</div>
+
+          <p>
+            Here is a step which I really like. The minimizer of a squared
+            error is a conditional mean, so the network that best fits the easy,
+            per-sample targets is <em>forced</em> to predict their average, which
+            is exactly the marginal field \( u_t(x) \) we could not write down. We
+            never form the expectation; the loss forms it for us, for free. This
+            is flow matching. As a concrete instance, the straight-line schedule
+            \( \alpha_t = 1 - t,\, \sigma_t = t \) gives \( x_t = (1-t)x_0 + t
+            \varepsilon \) and a constant conditional velocity \( u_t(x \mid x_0) =
+            \varepsilon - x_0 \), so each data point just drifts in a straight line
+            toward its noise. Succulent
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">Flow matching</p>
+            <p>
+              \( \displaystyle \min_\theta\, \mathbb{E}\,\big\| v_\theta(x_t, t) -
+              u_t(x_t \mid x_0) \big\|^2 \;\Rightarrow\; v_\theta(x, t) \to u_t(x)
+              = \mathbb{E}\big[\, u_t(x \mid x_0) \mid x_t = x \,\big]. \)
+            </p>
+          </blockquote>
+
+          <h2>View three: the gradient that points home</h2>
+
+          <p>
+            View one left us stuck on the normalizing constant. The score is the
+            solution, and it works by refusing to worry about that constant at
+            all. Instead of the density, track its log-gradient \( \nabla \log
+            p_t(x) \), a field pointing in the direction the density climbs
+            fastest. Write any density as \( p_t(x) = \tilde p_t(x) / Z_t \), an
+            unnormalized part over a constant. Take the
+            log-gradient (this will be very familiar to the PPO people):
+          </p>
+
+          <div class="blog-eq">\[ \nabla_x \log p_t(x) = \nabla_x \log \tilde p_t(x) - \underbrace{\nabla_x \log
+            Z_t}_{=\,0}. \]</div>
+
+          <p>
+            \( Z_t \) does not depend on \( x \), so its gradient is zero, and the
+            wall is simply gone. The score knows the <em>shape</em> of the
+            density, where it rises and falls, without knowing its absolute scale,
+            and for generation that is plenty: to walk toward data you only need
+            to know which way the data goes! It is the job of the model to figure out exactness. What is a function
+            learner good for anyways?
+          </p>
+
+          <p>
+            As always, the conditional is a gift. A Gaussian's log-gradient is
+            immediate,
+          </p>
+
+          <div class="blog-eq">\[ \nabla_x \log p_t(x \mid x_0) = -\frac{x - \alpha_t x_0}{\sigma_t^2} =
+            -\frac{\varepsilon}{\sigma_t}, \]</div>
+
+          <p>
+            using \( x = \alpha_t x_0 + \sigma_t \varepsilon \). Now look at that
+            right-hand side, because I am telling you it is important : the conditional score
+            is just the noise you added, rescaled. Pointing along \( -\varepsilon
+            \) is pointing straight back at the clean sample. The score was a
+            denoiser all along, wearing different clothes. And the marginal score
+            is again a posterior average we take by regression, never by
+            integration:
+          </p>
+
+          <div class="blog-eq">\[ \mathcal{L}(\theta) = \mathbb{E}_{t,\, x_0,\, \varepsilon}\, \Big\| s_\theta(x_t, t) +
+            \tfrac{\varepsilon}{\sigma_t} \Big\|^2. \]</div>
+
+          <p>
+            This is denoising score matching, the same least-squares magic as flow
+            matching: the conditional mean that minimizes it is exactly the
+            marginal score. Spelling that mean out gives Tweedie's formula,
+          </p>
+
+          <div class="blog-eq">\[ \nabla_x \log p_t(x) = -\frac{x - \alpha_t\, \mathbb{E}[x_0 \mid x_t =
+            x]}{\sigma_t^2}, \]</div>
+
+          <p>
+            which is worth reflecting on: the score at \( x \) is a straight line to
+            the <em>expected clean sample</em> given \( x \). Learning the score,
+            predicting the noise, and building an optimal denoiser are three names
+            for one network. And the score alone already generates: Langevin
+            dynamics, \( x \leftarrow x + \tfrac{\eta}{2} \nabla \log p_t(x) +
+            \sqrt{\eta}\, z \), walks uphill toward the data with a little noise
+            for exploration.
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">Score = denoiser</p>
+            <p>
+              \( \nabla_x \log p_t(x) = -\dfrac{x - \alpha_t\, \mathbb{E}[x_0 \mid
+              x_t = x]}{\sigma_t^2}. \) The gradient of a density you cannot
+              evaluate is just a rescaled estimate of the noise.
+            </p>
+          </blockquote>
+
+          <h2>View four: noising as a process you can run backward</h2>
+
+          <p>
+            So far the path has been a sequence of snapshots. Zoom in between the
+            frames and ask what is the actual process The answer is a
+            stochastic differential equation: a rule for nudging a sample forward
+            by a deterministic drift plus a continuous drizzle of noise,
+          </p>
+
+          <div class="blog-eq">\[ dx = f(x, t)\, dt + g(t)\, dW, \]</div>
+
+          <p>
+            where \( f \) is the drift and \( g \) scales \( dW \), an increment of
+            Brownian motion, the continuous-time limit of sprinkling in fresh
+            Gaussian noise at every step. The choice \( f = -\tfrac{1}{2}\beta(t)
+            x \) and \( g = \sqrt{\beta(t)} \) is exactly the continuous limit of
+            the DDPM noising chain, and stepping it forward from \( x_0 \) drifts
+            you into \( \mathcal{N}(0, I) \). Its
+            distribution at time \( t \) is precisely our \( p_t \), the link being
+            the <a href="/academia/fokker-planck">Fokker-Planck equation</a>,
+          </p>
+
+          <div class="blog-eq">\[ \partial_t p_t(x) = -\nabla \cdot \big(f(x, t)\, p_t(x)\big) + \tfrac{1}{2} g(t)^2
+            \nabla^2 p_t(x). \]</div>
+
+          <p>
+            Now the payoff. A theorem of Anderson
+            (1982) says the time-reversal of that forward SDE is itself an SDE,
+          </p>
+
+          <div class="blog-eq">\[ dx = \big[\, f(x, t) - g(t)^2\, \nabla_x \log p_t(x) \,\big]\, dt + g(t)\, d\bar W, \]
+          </div>
+
+          <p>
+            integrated from \( t = 1 \) back to \( t = 0 \). Look at the reverse
+            drift: the forward drift, corrected by the score from view three. The
+            randomness that destroyed the signal is still here, but now it is
+            steered at every instant back toward the data. Drop in a trained \(
+            s_\theta \approx \nabla \log p_t \), start from \( \mathcal{N}(0, I)
+            \), integrate down, and what lands in your hands is a sample from \(
+            p_0 \). The same equation that ruined the data knew how to rebuild it
+            all along.
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">Reverse-time SDE</p>
+            <p>
+              \( dx = \big[\, f - g^2\, \nabla_x \log p_t(x) \,\big]\, dt + g\,
+              d\bar W. \) Run the noising backward, steer it with the score, and
+              noise flows back into data.
+            </p>
+          </blockquote>
+
+          <h2>View five: the same path, minus the randomness</h2>
+
+          <p>
+            The reverse SDE generates beautifully, but it carries randomness the
+            whole way home, a fresh coin flip at every step. What if you wanted the
+            trip deterministic: same starting noise, same final image, every time?
+            Go back to the Fokker-Planck equation and rewrite its diffusion term as
+            a transport term, using \( \nabla^2 p_t = \nabla \cdot (\nabla p_t) \)
+            and the identity \( \nabla p_t = p_t \nabla \log p_t \):
+          </p>
+
+          <div class="blog-eq">\[ \tfrac{1}{2} g^2 \nabla^2 p_t = \nabla \cdot \Big( \tfrac{1}{2} g^2\, p_t\, \nabla
+            \log p_t \Big). \]</div>
+
+          <p>
+            Fold it back in and the whole right-hand side collapses into a single
+            divergence, \( \partial_t p_t = -\nabla \cdot \big( [\, f -
+            \tfrac{1}{2} g^2 \nabla \log p_t \,]\, p_t \big) \). Set that beside the
+            continuity equation from view two, \( \partial_t p_t + \nabla \cdot
+            (p_t u_t) = 0 \). They are the same equation, and matching them reads
+            the velocity:
+          </p>
+
+          <div class="blog-eq">\[ \frac{dx}{dt} = f(x, t) - \tfrac{1}{2} g(t)^2\, \nabla_x \log p_t(x). \]</div>
+
+          <p>
+            This is the probability-flow ODE, and notice it is nothing more than
+            the marginal vector field of view two, written in the language of the
+            score of view three. The series quietly closes its own loop, and I
+            cannot get over how cleanly it does. Set it beside the reverse SDE
+            drift \( f - g^2 \nabla \log p_t \): same ingredients, but the score's
+            coefficient is halved. That single factor of two is the entire price
+            of determinism. The SDE leans on the score twice as hard because it is
+            also busy undoing the noise it keeps injecting; the ODE injects none,
+            so it needs half as much.
+          </p>
+
+          <p>Stripping the randomness buys three things worth the trouble:</p>
+
+          <ul>
+            <li>
+              <strong>Deterministic sampling.</strong> Fix the initial noise and
+              you fix the output. The map from latent to image is a genuine
+              function, so interpolation and editing behave.
+            </li>
+            <li>
+              <strong>Exact likelihoods.</strong> A deterministic flow is a
+              continuous normalizing flow, so the instantaneous change-of-variables
+              formula recovers \( \log p_0(x) \) by integrating the divergence of
+              the field along the trajectory. The density we called unreachable in
+              view one becomes computable, after the fact, through the ODE.
+            </li>
+            <li>
+              <strong>Fast solvers.</strong> With no Brownian term, off-the-shelf
+              ODE integrators take large, accurate steps. DDIM is one such
+              discretization, and it is why a handful of steps can be enough.
+            </li>
+          </ul>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">Probability-flow ODE</p>
+            <p>
+              \( \dfrac{dx}{dt} = f - \tfrac{1}{2} g^2\, \nabla_x \log p_t(x). \)
+              The reverse SDE with its noise cut, sharing every marginal
+              \( p_t \).
+            </p>
+          </blockquote>
+
+          <h2>One density, many ways of looking at it </h2>
+
+          <p>
+            Step back and the whole picture is very clean. There is
+            one density \( p_t \) carrying data to noise. The vector field is that
+            density seen as motion. The score is that density seen through its
+            gradient. The SDE is the random process whose law at every instant is
+            that density. The probability-flow ODE is the same path with the noise
+            deleted, which turns out to be the vector field written in the score's
+            language. Four handles, one object. Learn the score by denoising and
+            you can run any of the generators, because the field, the reverse SDE,
+            and the ODE are all built from it.
+          </p>
+
+          <p>
+            Schrödinger was not fascinated by particles just so. They govern everything. On another article, I will be
+            exploring his bridges (Schrödinger Bridges)
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <section class="blog-next">
+      <div class="container">
+        <p class="type-mono">[ Academia ]</p>
+        <a href="/academia">
+          <h2>Return to Academia</h2>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-row">
+          <div class="footer-col">
+            <h2>Adb</h2>
+          </div>
+
+          <div class="footer-col">
+            <div class="footer-sub-col">
+              <a href="/">
+                <h3>Index</h3>
+              </a>
+              <a href="/lab">
+                <h3>Research</h3>
+              </a>
+              <a href="/work">
+                <h3>Archive</h3>
+              </a>
+              <a href="/esoterica">
+                <h3>Esoterica</h3>
+              </a>
+              <a href="/academia">
+                <h3>Academia</h3>
+              </a>
+              <a href="/lab#papers">
+                <h3>Papers</h3>
+              </a>
+              <a href="/contact">
+                <h3>Connect</h3>
+              </a>
+            </div>
+
+            <div class="footer-sub-col">
+              <a href="https://github.com/KoldAd1b" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/ahnaf-adib369/" target="_blank"
+                rel="noopener noreferrer">LinkedIn</a>
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+              <a href="mailto:ahnafadib7546@gmail.com" target="_blank" rel="noopener noreferrer">Email</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-row">
+          <p class="type-mono">The human in the loop</p>
+          <p class="type-mono">[ Python / TypeScript / Multi-Agent ML ]</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <svg viewBox="0 0 0 0" aria-hidden="true" style="position: absolute; width: 0; height: 0; pointer-events: none">
+    <defs>
+      <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140">
+        </feColorMatrix>
+      </filter>
+    </defs>
+  </svg>
+
+  <script type="module" src="/js/lenis-scroll.js"></script>
+  <script type="module" src="/js/transition.js"></script>
+  <script type="module" src="/js/nav.js"></script>
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/animated-copy.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+</body>
+
+</html>

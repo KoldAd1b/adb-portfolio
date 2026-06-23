@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fokker-Planck Equation | Adb Academia</title>
+  <meta name="author" content="Ahnaf Adib" />
+  <meta name="description"
+    content="Deriving the Fokker-Planck equation from a stochastic differential equation, through test functions, the Ito second-order term, and integration by parts." />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" type="image/png" href="/site-icon.png" />
+
+  <link rel="stylesheet" href="/globals.css" />
+  <link rel="stylesheet" href="/css/nav.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/blog.css" />
+  <link rel="stylesheet" href="/css/footer.css" />
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- MathJax v3: inline \( \) and $ $, display \[ \] and $$ $$ -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [
+          ["\\(", "\\)"],
+          ["$", "$"],
+        ],
+        displayMath: [
+          ["\\[", "\\]"],
+          ["$$", "$$"],
+        ],
+      },
+      options: {
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre"],
+      },
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <div class="transition-grid">
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+    <div class="transition-block"></div>
+  </div>
+
+  <script>
+    if (sessionStorage.getItem("pageTransition") === "true") {
+      const grid = document.querySelector(".transition-grid");
+      if (grid) {
+        grid.style.backgroundColor = "var(--bg)";
+        grid.style.zIndex = "1000";
+        grid.style.pointerEvents = "auto";
+      }
+      const blocks = grid.querySelectorAll(".transition-block");
+      blocks.forEach((block) => {
+        block.style.opacity = "1";
+      });
+    }
+  </script>
+
+  <nav>
+    <div class="container">
+      <div class="nav-clock">
+        <p class="type-mono">18 <span>:</span> 25 CT</p>
+      </div>
+
+      <div class="nav-logo">
+        <a href="/" class="type-mono">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" fill="none">
+            <g clip-path="url(#clip0_1002_3)">
+              <path
+                d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
+                fill="black" />
+              <path
+                d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
+                fill="black" />
+            </g>
+            <defs>
+              <clipPath id="clip0_1002_3">
+                <rect width="1000" height="1000" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </a>
+      </div>
+
+      <div class="nav-location">
+        <p class="type-mono">
+          <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
+        </p>
+      </div>
+    </div>
+  </nav>
+
+  <div class="menu-toggle-btn">
+    <div class="hamburger-bar"></div>
+    <div class="hamburger-bar"></div>
+  </div>
+
+  <div class="menu-overlay">
+    <div class="menu-bg">
+      <canvas id="menu-canvas"></canvas>
+    </div>
+
+    <div class="menu-overlay-nav">
+      <div class="close-btn">
+        <div class="close-btn-bar"></div>
+        <div class="close-btn-bar"></div>
+      </div>
+
+      <div class="menu-overlay-items">
+        <a class="type-mono" href="https://www.linkedin.com/in/ahnaf-adib369/" target="_blank"
+          rel="noopener noreferrer">LinkedIn</a>
+        <a class="type-mono" href="https://github.com/KoldAd1b" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+
+    <div class="menu-overlay-footer">
+      <a class="type-mono" href="/lab">Research Access</a>
+      <a class="type-mono" href="/esoterica">Esoterica</a>
+      <a class="type-mono" href="/academia">Academia</a>
+      <a class="type-mono" href="/contact">Get in Touch</a>
+    </div>
+
+    <div class="circular-menu">
+      <div class="joystick">
+        <ion-icon name="grid-sharp" class="center-icon center-main"></ion-icon>
+        <ion-icon name="chevron-up-sharp" class="center-icon center-up"></ion-icon>
+        <ion-icon name="chevron-down-sharp" class="center-icon center-down"></ion-icon>
+        <ion-icon name="chevron-back-sharp" class="center-icon center-left"></ion-icon>
+        <ion-icon name="chevron-forward-sharp" class="center-icon center-right"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="blog-hero blog-hero-post">
+      <img src="/lab/hero-visual.png" alt="" />
+      <div class="blog-hero-shade"></div>
+      <div class="container">
+        <div class="blog-hero-copy">
+          <a class="type-mono blog-back-link" href="/academia">Academia</a>
+          <p class="type-mono" data-animate-variant="flicker" data-animate-on-scroll="false" data-animate-delay="0.2">
+            Machine Learning / Diffusion Models
+          </p>
+          <h1 data-animate-variant="diffuse" data-animate-on-scroll="false" data-animate-delay="0.1">
+            The Fokker-Planck<br />Equation
+          </h1>
+          <p class="blog-dek" data-animate-variant="slide" data-animate-type="lines" data-animate-on-scroll="false"
+            data-animate-delay="0.75">
+            An SDE describes one jittering particle. Fokker-Planck describes the
+            whole cloud as a deterministic flow of probability. Getting from one
+            to the other runs through a single surprising fact about how rough
+            Brownian motion really is.
+          </p>
+        </div>
+        <div class="blog-hero-meta">
+          <p class="type-mono">Draft</p>
+          <p class="type-mono">Long read</p>
+        </div>
+      </div>
+    </section>
+
+    <article class="blog-article">
+      <div class="container">
+        <aside class="blog-article-rail">
+          <p class="type-mono">Result</p>
+          <p>\( \partial_t p_t = -\operatorname{div}(p_t u_t) + \tfrac{\sigma_t^2}{2}\Delta p_t \)</p>
+          <p class="type-mono">Method</p>
+          <p>Test functions, Ito's second-order term, integration by parts.</p>
+          <p class="type-mono">Signal</p>
+          <p>The particle is rough so the crowd can be smooth.</p>
+        </aside>
+
+        <div class="blog-article-body">
+          <p class="blog-lede">
+            Every time a diffusion model needs to connect its random, jittering
+            particles to the smooth density they belong to, it reaches for the
+            same equation: Fokker-Planck. We have used it more than once,
+            the SDE and the distribution \( p_t \) are "the same story," the law
+            of the noising process at each instant "is" \( p_t \). An SDE describes one
+            particle taking one noisy step after another, all jitter and
+            randomness. Fokker-Planck describes the entire cloud of those
+            particles as a single deterministic flow of probability, smooth and
+            lawful. How do you get from the one to the other? Through a single
+            surprising fact about how rough Brownian motion really is, and that
+            one fact is the whole reason the equation has the shape it does. It
+            is, honestly, quite mystical.
+          </p>
+
+          <h2>One particle, and the crowd it belongs to</h2>
+
+          <p>
+            Our object is a particle whose position \( X_t \in \mathbb{R}^d \)
+            wanders according to
+          </p>
+
+          <div class="blog-eq">\[ dX_t = u_t(X_t)\, dt + \sigma_t\, dW_t, \]</div>
+
+          <p>
+            a deterministic drift \( u_t \) nudging it along, and a Brownian term
+            \( \sigma_t\, dW_t \) shoving it around at random. One run of this is
+            one jagged trajectory. But run it from many starting points, or many
+            times over, and at each instant \( t \) the particle's position has a
+            distribution; call its density \( p_t(x) \). The drift and the noise
+            are a rule for the <em>particle</em>. What we want is the law of
+            motion for the <em>density</em>: a partial differential equation
+            saying how \( p_t \) sloshes and spreads over time. That equation is
+            the target,
+          </p>
+
+          <div class="blog-eq">\[ \partial_t p_t(x) = -\operatorname{div}\!\big(p_t(x)\, u_t(x)\big) +
+            \frac{\sigma_t^2}{2}\, \Delta p_t(x), \]</div>
+
+          <p>
+            and the only honest way to truly understand it is to start from the particle and
+            let the crowd emerge.
+          </p>
+
+          <h2>Don't just look at the density, inspect it</h2>
+
+          <p>
+            Going straight at \( p_t \) is awkward: the thing we know how to push
+            forward in time is the particle, not its density. So we use a classic
+            piece of misdirection, and it feels a little like cheating right up
+            until you see why. Pick any smooth <em>test function</em> \( f :
+            \mathbb{R}^d \to \mathbb{R} \), think of it as a measurement you take
+            on the particle, a probe, and instead of tracking \( p_t \) directly,
+            track how the <em>average</em> reading \( \mathbb{E}[f(X_t)] \)
+            changes in time. Two payoffs come from this. The particle's motion
+            tells us how \( f(X_t) \) changes, which we can actually compute. And
+            because
+          </p>
+
+          <div class="blog-eq">\[ \mathbb{E}[f(X_t)] = \int f(x)\, p_t(x)\, dx, \]</div>
+
+          <p>
+            anything we learn about the average is secretly a statement about \(
+            p_t \), once we shuffle the derivatives off \( f \) and onto \( p_t \)
+            at the very end. We interrogate the density through every possible
+            probe, then let the probes go.
+          </p>
+
+          <h2>A single step, Taylor expanded</h2>
+
+          <p>
+            Freeze the particle at \( X_t \) and let it take one small step of
+            duration \( h \). Discretized, the SDE moves it by
+          </p>
+
+          <div class="blog-eq">\[ \delta = X_{t+h} - X_t = h\, u_t(X_t) + \sigma_t\, \Delta W, \qquad \Delta W \sim
+            \mathcal{N}(0,\, h I_d), \]</div>
+
+          <p>
+            the drift contributing a clean \( h\, u_t \), the noise contributing a
+            Gaussian kick \( \Delta W \) of variance \( h \). The reading changes
+            by \( f(X_t + \delta) - f(X_t) \), and since \( \delta \) is small we
+            Taylor expand, keeping <em>two</em> orders:
+          </p>
+
+          <div class="blog-eq">\[ f(X_{t+h}) - f(X_t) \approx \nabla f(X_t)^T \delta + \tfrac12\, \delta^T \nabla^2
+            f(X_t)\, \delta. \]</div>
+
+          <p>
+            Substitute \( \delta = h\, u + \sigma_t \Delta W \) (writing \( u =
+            u_t(X_t) \) and \( A = \nabla^2 f(X_t) \) for the Hessian), and the
+            right-hand side fans out into five pieces:
+          </p>
+
+          <div class="blog-eq">\[ \begin{aligned} f(X_{t+h}) - f(X_t) \approx\;& h\, \nabla f^T u \\ &+ \sigma_t\,
+            \nabla f^T \Delta W \\ &+ \tfrac12 h^2\, u^T A\, u \\ &+ h \sigma_t\, u^T A\, \Delta W \\ &+ \tfrac12
+            \sigma_t^2\, \Delta W^T A\, \Delta W. \end{aligned} \]</div>
+
+          <p>Five terms. Now we average, and watch which ones survive.</p>
+
+          <h2>Where Brownian roughness refuses to vanish</h2>
+
+          <p>
+            Take the conditional expectation \( \mathbb{E}[\,\cdot \mid X_t] \):
+            freeze the current position, average only over the fresh noise \(
+            \Delta W \). With \( X_t \) fixed, \( u \), \( \nabla f \), and \( A \)
+            are all constants, and the only random object left is \( \Delta W \),
+            which Brownian motion hands us in two facts,
+          </p>
+
+          <div class="blog-eq">\[ \mathbb{E}[\Delta W \mid X_t] = 0, \qquad \mathbb{E}[\Delta W \Delta W^T \mid X_t] = h
+            I_d. \]</div>
+
+          <p>
+            Run down the five terms. The lone-\( \Delta W \) term (second) and the
+            drift-noise cross term (fourth) each carry a single factor of \(
+            \Delta W \), so they average to zero. The drift-drift term (third) is
+            \( O(h^2) \), obliterated the instant we divide by \( h \). The drift term
+            (first) survives as \( h\, \nabla f^T u \). And then there is the last
+            one, the noise-noise term, and this is what we want.
+          </p>
+
+          <p>
+            Naively you would expect a product of two \( \Delta W \)'s to be
+            negligible, second order, gone. It is not, and the reason is that
+            Brownian motion is <em>confusing</em>: \( \Delta W \) scales like \(
+            \sqrt{h} \), not \( h \), so \( \Delta W^2 \) scales like \( h \), the
+            very same order as the drift. Make it precise with \( \Delta W =
+            \sqrt{h}\, \varepsilon \), \( \varepsilon \sim \mathcal{N}(0, I_d) \),
+            and the Gaussian quadratic-form identity \( \mathbb{E}[\varepsilon^T A
+            \varepsilon] = \operatorname{tr}(A) \):
+          </p>
+
+          <div class="blog-eq">\[ \mathbb{E}[\Delta W^T \nabla^2 f\, \Delta W \mid X_t] = h\, \mathbb{E}[\varepsilon^T
+            \nabla^2 f\, \varepsilon] = h\, \operatorname{tr}(\nabla^2 f) = h\, \Delta f, \]</div>
+
+          <p>
+            using \( \operatorname{tr}(\nabla^2 f) = \Delta f \), the trace of the
+            Hessian is the Laplacian. Let us stop to think for a second. A term you would
+            have thrown away survives, and it survives <em>as the Laplacian</em>.
+            The entire diffusion half of Fokker-Planck is born right here, out of
+            a quantity you almost discarded.
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">The Ito term</p>
+            <p>
+              \( \mathbb{E}[\Delta W^T \nabla^2 f\, \Delta W \mid X_t] = h\,
+              \Delta f. \) Brownian motion's \( \sqrt{h} \) roughness makes a
+              second-order term survive as a first-order one, and it arrives
+              wearing a Laplacian.
+            </p>
+          </blockquote>
+
+          <h2>From the particle to the density</h2>
+
+          <p>Finding the gold among glitter,</p>
+
+          <div class="blog-eq">\[ \mathbb{E}[f(X_{t+h}) - f(X_t) \mid X_t] = h\, \nabla f^T u + \tfrac12 h^2\, u^T
+            \nabla^2 f\, u + \frac{h}{2}\, \sigma_t^2\, \Delta f. \]</div>
+
+          <p>
+            Divide by \( h \) and let \( h \to 0 \). The \( O(h^2) \) drift-drift
+            term drops, and the left side becomes the time derivative of the
+            average reading:
+          </p>
+
+          <div class="blog-eq">\[ \partial_t \mathbb{E}[f(X_t)] = \mathbb{E}\!\left[ \nabla f(X_t)^T u_t(X_t) +
+            \frac{\sigma_t^2}{2}\, \Delta f(X_t) \right]. \]</div>
+
+          <p>
+            This is already a complete description of the dynamics, told from the
+            particle's side. To turn it into a statement about \( p_t \), write
+            both expectations as integrals against the density,
+          </p>
+
+          <div class="blog-eq">\[ \partial_t \mathbb{E}[f(X_t)] = \int \nabla f(x)^T u_t(x)\, p_t(x)\, dx +
+            \frac{\sigma_t^2}{2} \int \Delta f(x)\, p_t(x)\, dx. \]</div>
+
+          <p>
+            Every derivative here still sits on the probe \( f \). The last move
+            is to hand them back to \( p_t \).
+          </p>
+
+          <h2>Hand the derivatives back to the density</h2>
+
+          <p>
+            This is integration by parts, the powerhouse (mitochondria) of the whole
+            derivation, and it does exactly the one thing we need: it converts
+            "derivatives of the probe" into "derivatives of the density."
+            For the drift term, the identity \( \int \nabla f^T F\, dx = -\int f\,
+            \operatorname{div}(F)\, dx \) with \( F = p_t u_t \) gives
+          </p>
+
+          <div class="blog-eq">\[ \int \nabla f(x)^T u_t(x)\, p_t(x)\, dx = -\int f(x)\, \operatorname{div}(p_t
+            u_t)(x)\, dx. \]</div>
+
+          <p>
+            The minus sign and the divergence are not there to just stare at you: integration by
+            parts always flips a sign, and summing the per-coordinate derivatives
+            \( \sum_i \partial_i F_i \) is precisely \( \operatorname{div}(F) \).
+            For the diffusion term, integrate by parts twice (Green's identity), \(
+            \int p_t \Delta f\, dx = \int f \Delta p_t\, dx \):
+          </p>
+
+          <div class="blog-eq">\[ \frac{\sigma_t^2}{2} \int \Delta f(x)\, p_t(x)\, dx = \int f(x)\,
+            \frac{\sigma_t^2}{2}\, \Delta p_t(x)\, dx. \]</div>
+
+          <p>
+            Both steps quietly assume the density and its gradient decay at
+            infinity, so the boundary terms vanish, which holds for any
+            distribution worth the name. Putting the two together, the whole
+            right-hand side is now a single integral with every derivative resting
+            on \( p_t \):
+          </p>
+
+          <div class="blog-eq">\[ \partial_t \mathbb{E}[f(X_t)] = \int f(x) \left[ -\operatorname{div}(p_t u_t)(x) +
+            \frac{\sigma_t^2}{2}\, \Delta p_t(x) \right] dx. \]</div>
+
+          <h2>Strip it, and the PDE is forced</h2>
+
+          <p>
+            One thread remains. The left side, \( \partial_t \mathbb{E}[f(X_t)]
+            \), is also \( \partial_t \int f\, p_t\, dx = \int f\, \partial_t p_t\,
+            dx \), since \( f \) does not depend on time. So
+          </p>
+
+          <div class="blog-eq">\[ \int f(x)\, \partial_t p_t(x)\, dx = \int f(x) \left[ -\operatorname{div}(p_t u_t)(x)
+            + \frac{\sigma_t^2}{2}\, \Delta p_t(x) \right] dx, \]</div>
+
+          <p>
+            and this holds for <em>every</em> smooth test function \( f \). A
+            function that, integrated against everything, always agrees with
+            another must equal it pointwise. The probes have done their job; let
+            them go, and what is left standing is the equation:
+          </p>
+
+          <blockquote class="blog-result">
+            <p class="type-mono blog-result-label">Fokker-Planck</p>
+            <p>
+              \( \partial_t p_t(x) = -\operatorname{div}\!\big(p_t(x)\,
+              u_t(x)\big) + \dfrac{\sigma_t^2}{2}\, \Delta p_t(x). \)
+            </p>
+          </blockquote>
+
+          <h2>What it says, and why we needed it</h2>
+
+          <p>
+            Let us read the two terms. The first, \( -\operatorname{div}(p_t u_t) \), is
+            <strong>transport</strong>: the drift \( u_t \) carries probability
+            mass around, exactly the continuity equation of a flowing fluid. The
+            second, \( \tfrac{\sigma_t^2}{2} \Delta p_t \), is
+            <strong>diffusion</strong>: the Laplacian, that presents from Brownian
+            roughness, smooths and spreads the density, flattening peaks and
+            filling valleys. Density change is transport by drift plus diffusion
+            by noise, and now we know exactly where each half came from.
+          </p>
+
+          <p>
+            This is the support vector the rest of diffusion swings on. It is what licenses
+            the claim, made all over the
+            <a href="/academia/diffusion">five views</a>, that the SDE's law at
+            every instant <em>is</em> the distribution \( p_t \): the density is
+            not a separate model, it is the deterministic shadow this PDE casts
+            from the particle's random walk. And it is the doorway to the
+            probability-flow ODE, where you take this very equation, fold the
+            diffusion term into the transport term with \( \Delta p_t =
+            \operatorname{div}(p_t \nabla \log p_t) \), and watch the noise turn
+            into a velocity. (Map the names back: there the drift \( u_t \) is
+            written \( f \), the noise \( \sigma_t \) is written \( g \), and \(
+            \Delta \) is written \( \nabla^2 \).)
+          </p>
+
+          <p>
+            So the best part of discovering this equation is that Planck is not just popular for the Planck constant...
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <section class="blog-next">
+      <div class="container">
+        <p class="type-mono">[ Academia ]</p>
+        <a href="/academia">
+          <h2>Return to Academia</h2>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-row">
+          <div class="footer-col">
+            <h2>Adb</h2>
+          </div>
+
+          <div class="footer-col">
+            <div class="footer-sub-col">
+              <a href="/">
+                <h3>Index</h3>
+              </a>
+              <a href="/lab">
+                <h3>Research</h3>
+              </a>
+              <a href="/work">
+                <h3>Archive</h3>
+              </a>
+              <a href="/esoterica">
+                <h3>Esoterica</h3>
+              </a>
+              <a href="/academia">
+                <h3>Academia</h3>
+              </a>
+              <a href="/lab#papers">
+                <h3>Papers</h3>
+              </a>
+              <a href="/contact">
+                <h3>Connect</h3>
+              </a>
+            </div>
+
+            <div class="footer-sub-col">
+              <a href="https://github.com/KoldAd1b" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/ahnaf-adib369/" target="_blank"
+                rel="noopener noreferrer">LinkedIn</a>
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+              <a href="mailto:ahnafadib7546@gmail.com" target="_blank" rel="noopener noreferrer">Email</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-row">
+          <p class="type-mono">The human in the loop</p>
+          <p class="type-mono">[ Python / TypeScript / Multi-Agent ML ]</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <svg viewBox="0 0 0 0" aria-hidden="true" style="position: absolute; width: 0; height: 0; pointer-events: none">
+    <defs>
+      <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140">
+        </feColorMatrix>
+      </filter>
+    </defs>
+  </svg>
+
+  <script type="module" src="/js/lenis-scroll.js"></script>
+  <script type="module" src="/js/transition.js"></script>
+  <script type="module" src="/js/nav.js"></script>
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/animated-copy.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+</body>
+
+</html>

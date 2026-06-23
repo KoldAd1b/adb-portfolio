@@ -29,8 +29,23 @@ function serveLinkedCss() {
   };
 }
 
+// Vite only reloads an HTML edit when the browser URL matches the file path.
+// This site serves extensionless clean URLs (/blog) while the file is blog.html,
+// so that match never happens. Force a full reload on any .html change instead.
+function reloadOnHtmlChange() {
+  return {
+    name: "reload-on-html-change",
+    handleHotUpdate({ file, server }) {
+      if (file.endsWith(".html")) {
+        server.ws.send({ type: "full-reload", path: "*" });
+        return [];
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [serveLinkedCss()],
+  plugins: [serveLinkedCss(), reloadOnHtmlChange()],
   build: {
     rollupOptions: {
       input: {
@@ -40,6 +55,8 @@ export default defineConfig({
         maya: resolve(__dirname, "esoterica/maya.html"),
         academia: resolve(__dirname, "academia.html"),
         vaeElbo: resolve(__dirname, "academia/vae-elbo.html"),
+        diffusion: resolve(__dirname, "academia/diffusion.html"),
+        fokkerPlanck: resolve(__dirname, "academia/fokker-planck.html"),
         work: resolve(__dirname, "lab.html"),
         culture: resolve(__dirname, "work.html"),
         directors: resolve(__dirname, "project.html"),

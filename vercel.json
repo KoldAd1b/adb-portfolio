@@ -8,6 +8,8 @@
     { "source": "/esoterica/maya", "destination": "/esoterica/maya.html" },
     { "source": "/academia", "destination": "/academia.html" },
     { "source": "/academia/vae-elbo", "destination": "/academia/vae-elbo.html" },
+    { "source": "/academia/diffusion", "destination": "/academia/diffusion.html" },
+    { "source": "/academia/fokker-planck", "destination": "/academia/fokker-planck.html" },
     { "source": "/work", "destination": "/work.html" },
     { "source": "/project", "destination": "/case/voice-agent.html" },
     { "source": "/case/voice-agent", "destination": "/case/voice-agent.html" },
