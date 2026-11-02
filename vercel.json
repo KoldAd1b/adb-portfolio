@@ -2,24 +2,58 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/lab", "destination": "/lab.html" },
-    { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/esoterica", "destination": "/esoterica.html" },
-    { "source": "/esoterica/maya", "destination": "/esoterica/maya.html" },
-    { "source": "/academia", "destination": "/academia.html" },
-    { "source": "/academia/vae-elbo", "destination": "/academia/vae-elbo.html" },
-    { "source": "/academia/diffusion", "destination": "/academia/diffusion.html" },
-    { "source": "/academia/fokker-planck", "destination": "/academia/fokker-planck.html" },
-    { "source": "/work", "destination": "/work.html" },
-    { "source": "/project", "destination": "/case/voice-agent.html" },
-    { "source": "/case/voice-agent", "destination": "/case/voice-agent.html" },
-    { "source": "/case/research-systems", "destination": "/case/research-systems.html" },
-    { "source": "/case/saucebros", "destination": "/case/saucebros.html" },
-    { "source": "/case/codecollab", "destination": "/case/codecollab.html" },
-    { "source": "/case/scratch-lm", "destination": "/case/scratch-lm.html" },
-    { "source": "/case/torching", "destination": "/case/torching.html" },
-    { "source": "/case/tabby-cat", "destination": "/case/tabby-cat.html" },
-    { "source": "/case/mini-seek", "destination": "/case/mini-seek.html" },
-    { "source": "/contact", "destination": "/contact.html" }
+    {
+      "source": "/lab",
+      "destination": "/lab.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/esoterica",
+      "destination": "/esoterica.html"
+    },
+    {
+      "source": "/esoterica/maya",
+      "destination": "/esoterica/maya.html"
+    },
+    {
+      "source": "/academia",
+      "destination": "/academia.html"
+    },
+    {
+      "source": "/academia/vae-elbo",
+      "destination": "/academia/vae-elbo.html"
+    },
+    {
+      "source": "/academia/diffusion",
+      "destination": "/academia/diffusion.html"
+    },
+    {
+      "source": "/academia/fokker-planck",
+      "destination": "/academia/fokker-planck.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/work",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/project",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/case/:path*",
+      "destination": "/",
+      "permanent": false
+    }
   ]
 }

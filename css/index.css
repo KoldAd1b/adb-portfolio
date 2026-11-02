@@ -1,48 +1,426 @@
-.hero {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100svh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: center;
-  overflow: hidden;
-  padding: 1.5rem;
+@font-face {
+  font-family: "Fredoka";
+  src: url("/fonts/fredoka.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-.hero canvas#skyline {
+@font-face {
+  font-family: "CMU Serif";
+  src: url("/fonts/cmu-serif.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  src: url("/fonts/cmu-serif-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+body {
+  height: 100svh;
+}
+
+body .site-footer {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.signal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 34rem;
+  overflow: hidden;
+}
+
+.signal-canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: -1;
 }
 
-.hero .hero-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.hero .hero-footer .container {
+.signal-stage {
+  position: relative;
+  flex: 1;
   display: flex;
+  min-height: 0;
+  padding: 0 var(--gutter);
+}
+
+.signal-name {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 0 0.22em;
+  font-family: "Fredoka", "Lexend", sans-serif;
+  font-size: min(18vw, 42svh);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.word {
+  display: inline-flex;
+}
+
+.letter {
+  display: inline-block;
+  transform: translateY(var(--y, 0)) rotate(var(--r, 0));
+}
+
+.signal-pending .signal-name {
+  opacity: 0;
+}
+
+/* The noise runs under the controls and fades out behind them. */
+.signal-foot {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  padding: 2.25rem var(--gutter) clamp(0.75rem, 2svh, 1.5rem);
+  background: linear-gradient(to bottom, transparent, var(--paper) 2.25rem);
+}
+
+.signal-foot .lead {
+  margin: 0 0 0.25rem;
+  max-width: 24rem;
+  color: var(--ink);
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  line-height: 1.4;
+}
+
+.noise {
+  display: none;
+}
+
+.has-js .noise {
+  display: block;
+}
+
+.noise-head {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
 }
 
-.hero .hero-footer .container p {
-  color: var(--bg);
+/* Samplers: a shape for each, and one blob that slides between them. */
+.modes {
+  position: relative;
+  display: flex;
+  border: 0;
 }
 
-@media (max-width: 1000px) {
-  .hero-footer {
-    display: none;
+.modes legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.mode-blob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--lilac);
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.45s cubic-bezier(0.34, 1.3, 0.64, 1),
+    border-radius 0.55s ease;
+}
+
+.mode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  min-width: 4.5rem;
+  padding: 0.5rem 0.7rem 0.45rem;
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mode input {
+  position: absolute;
+  opacity: 0;
+}
+
+.mode svg {
+  width: 2.75rem;
+  height: 1.9rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mode svg .fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.mode:hover svg {
+  transform: scale(1.14) rotate(-4deg);
+}
+
+.mode:has(input:checked) {
+  color: var(--borahae);
+  font-weight: 500;
+}
+
+.mode:has(input:checked) svg {
+  transform: scale(1.1);
+}
+
+.mode:has(input:focus-visible) {
+  outline: 2.5px solid var(--borahae);
+  outline-offset: -2px;
+  border-radius: 1rem;
+}
+
+/* An organic button whose outline shifts when you reach for it. */
+.sample {
+  padding: 0.55rem 1.05rem;
+  border: 0;
+  border-radius: 58% 42% 52% 48% / 62% 48% 52% 38%;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-radius 0.5s ease,
+    background 0.2s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+}
+
+.sample:hover {
+  background: var(--borahae);
+  border-radius: 42% 58% 46% 54% / 44% 58% 42% 56%;
+  transform: scale(1.05) rotate(-1.5deg);
+}
+
+.sample:active {
+  transform: scale(0.95);
+}
+
+.sample.is-away {
+  opacity: 0;
+  transform: scale(0.7);
+  pointer-events: none;
+}
+
+/* The track: a tube bent into the sampler's equation. */
+.track {
+  position: relative;
+  height: 116px;
+  margin: 0.2rem 0 1.15rem;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.track.is-dragging {
+  cursor: grabbing;
+}
+
+.track svg {
+  display: block;
+  width: 100%;
+  height: 116px;
+  max-width: none;
+  overflow: visible;
+}
+
+.track path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.track-tube {
+  stroke: var(--lilac);
+  stroke-width: 11;
+}
+
+.track-done {
+  stroke: var(--borahae);
+  stroke-width: 5;
+}
+
+.track-start {
+  fill: var(--borahae);
+}
+
+.track-thumb {
+  fill: var(--borahae);
+  stroke: var(--paper);
+  stroke-width: 3.5;
+  filter: drop-shadow(0 2px 4px rgba(31, 10, 77, 0.35));
+  transition:
+    rx 0.25s ease,
+    ry 0.25s ease;
+}
+
+.track-overlay[data-kind="jump"] {
+  stroke: var(--ink);
+  stroke-width: 1.75;
+  stroke-dasharray: 5 6;
+}
+
+.track-overlay[data-kind="bell"] {
+  fill: rgba(122, 43, 232, 0.2);
+  stroke: var(--borahae);
+  stroke-width: 2;
+}
+
+/* The native range keeps keyboard control, with its focus shown on the thumb. */
+.track input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.track:has(input:focus-visible) .track-thumb {
+  stroke: var(--ink);
+}
+
+.track output {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--borahae);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.track-end {
+  position: absolute;
+  color: var(--muted);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.track-end-name {
+  left: 0.15rem;
+  bottom: -1.15rem;
+}
+
+.track-end-noise {
+  right: 0;
+  top: -0.1rem;
+}
+
+.noise-note {
+  max-width: none;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.noise-math {
+  display: inline-block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-family: "CMU Serif", "Times New Roman", serif;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.noise-math:hover {
+  color: var(--borahae);
+  text-decoration: underline;
+}
+
+.noise-math sub {
+  font-size: 0.7em;
+  line-height: 0;
+}
+
+@media (max-width: 860px) {
+  body {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .signal {
+    flex: 1;
+  }
+
+  .signal-stage {
+    min-height: 22rem;
+  }
+
+  .signal-name {
+    font-size: 30vw;
+    line-height: 0.98;
+    padding: 1.5rem 0 0;
+  }
+
+  .word {
+    width: 100%;
+  }
+
+  .signal-foot {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .modes {
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .mode {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 0.15rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* The longer button label needs its own row on phones, so the five shapes keep the width. */
+@media (max-width: 560px) {
+  .modes {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-blob {
+    transition: none;
   }
 }

@@ -1,7 +1,6 @@
 # Adb Portfolio
 
-Research-oriented portfolio for Ahnaf Adib, built with Vite, GSAP, Three.js,
-and Lenis.
+Research-oriented portfolio for Ahnaf Adib, built with Vite and plain HTML and CSS.
 
 ## Development
 
