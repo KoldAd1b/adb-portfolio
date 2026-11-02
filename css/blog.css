@@ -1,526 +1,198 @@
-.blog-hero {
-  position: relative;
-  width: 100%;
-  min-height: 86svh;
-  overflow: hidden;
-  background-color: var(--fg);
-  color: var(--bg);
+/* Writing indexes */
+.writing-group {
+  margin-top: 1.25rem;
 }
 
-.blog-hero img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.3);
-  opacity: 0.64;
+.writing-group h2 {
+  margin-bottom: 0.5rem;
 }
 
-.blog-hero-shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.92)),
-    repeating-linear-gradient(
-      0deg,
-      rgba(227, 6, 19, 0.08) 0,
-      rgba(227, 6, 19, 0.08) 1px,
-      transparent 1px,
-      transparent 7px
-    );
+.entry {
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(31, 10, 77, 0.25);
 }
 
-.blog-hero .container {
-  position: relative;
-  min-height: 86svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.blog-hero-copy {
-  width: 82%;
-  max-width: 1200px;
-  padding-top: 8rem;
-}
-
-.blog-hero-copy > * {
-  color: var(--bg);
-}
-
-.blog-hero h1,
-.blog-ledger h2,
-.blog-post-row h3,
-.blog-next h2 {
-  letter-spacing: 0;
-}
-
-.blog-hero h1 {
-  font-size: 7.25rem;
-  line-height: 0.82;
-  margin-top: 1rem;
-  max-width: 10ch;
-}
-
-.blog-dek {
-  width: 58%;
-  max-width: 760px;
-  margin-top: 1.5rem;
-  font-family: var(--type-2);
-  font-size: 2rem;
-  line-height: 1.05;
-  letter-spacing: 0;
-}
-
-.blog-back-link {
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
-.blog-hero-meta {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.blog-hero-meta p,
-.blog-hero-copy p.type-mono,
-.blog-back-link {
-  color: var(--bg);
-}
-
-.blog-ledger {
-  width: 100%;
-  padding: 8rem 0 14rem 0;
-  background-color: var(--bg);
-}
-
-.blog-ledger-alt {
+.entry:first-child {
   padding-top: 0;
+  border-top: 0;
 }
 
-.blog-ledger .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5rem;
+.entry:last-child {
+  padding-bottom: 0;
 }
 
-.blog-ledger-header {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.entry h3 {
+  font-size: 1.1rem;
 }
 
-.blog-post-row {
+.entry h3 a {
+  color: var(--borahae);
+}
+
+.entry p,
+.entry time {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Article */
+.blog-head {
+  padding: clamp(1.25rem, 3vw, 2rem) var(--gutter) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.blog-head .lead {
+  max-width: 34rem;
+}
+
+.blog-article > .container {
   display: grid;
-  grid-template-columns: 1fr 2.35fr 0.35fr;
-  gap: 3rem;
-  padding: 2rem 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.65);
-  text-transform: none;
-}
-
-.blog-post-row:last-child {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.65);
-}
-
-.blog-post-row-meta,
-.blog-post-row-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.blog-post-row-copy p {
-  width: 78%;
-  font-size: 1.25rem;
-  line-height: 1.15;
-  letter-spacing: 0;
-}
-
-.blog-post-row-mark {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-}
-
-.blog-post-row:hover .blog-post-row-copy h3 {
-  filter: url(#blur-matrix) blur(0.25px);
-}
-
-.blog-article {
-  width: 100%;
-  background-color: #f4f4f4;
-  color: #070707;
-  padding: 6rem 0 10rem 0;
-}
-
-.blog-article .container {
-  display: grid;
-  grid-template-columns: minmax(11rem, 0.45fr) minmax(0, 2.55fr);
-  gap: 5rem;
-  align-items: start;
-}
-
-/* Let the grid tracks collapse to the viewport instead of being held open
-   by wide (non-wrapping) math content — the classic min-width:auto trap. */
-.blog-article-rail,
-.blog-article-body {
-  min-width: 0;
+  grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+  gap: 1.5rem clamp(2rem, 5vw, 5rem);
+  padding: 0 var(--gutter) clamp(3rem, 6vw, 5rem);
 }
 
 .blog-article-rail {
   position: sticky;
-  top: 6rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-  padding-top: 0.35rem;
+  top: 1rem;
+  align-self: start;
+  font-size: 0.875rem;
+  line-height: 1.45;
 }
 
 .blog-article-rail p {
-  color: #070707;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
-  line-height: 1.45;
-  letter-spacing: 0;
+  margin-bottom: 0.7rem;
 }
 
-.blog-article-rail p.type-mono {
-  margin-top: 1rem;
-  font-family: var(--type-3);
-  font-size: 0.7rem;
-  line-height: 1.2;
-  letter-spacing: 0;
+.blog-article-rail p:last-child {
+  margin-bottom: 0;
+}
+
+.blog-article-rail .rail-label {
+  margin-bottom: 0.1rem;
+  color: var(--borahae);
+  font-weight: 500;
 }
 
 .blog-article-body {
-  max-width: 1080px;
+  min-width: 0;
+  max-width: 56rem;
 }
 
-/* Keep running prose at a comfortable measure; display math (.blog-eq)
-   is free to use the full, wider column. */
 .blog-article-body p,
 .blog-article-body li,
 .blog-article-body h2,
-.blog-article-body h3,
-.blog-article-body .blog-eyebrow,
-.blog-article-body .blog-math-note {
-  max-width: 68ch;
+.blog-article-body h3 {
+  max-width: var(--measure);
 }
 
 .blog-article-body p {
-  margin: 0 0 1.35em 0;
-  color: #070707;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.12rem;
-  line-height: 1.68;
-  letter-spacing: 0;
+  margin-bottom: 1.15em;
+  line-height: 1.75;
 }
 
 .blog-article-body .blog-lede {
-  margin-bottom: 1.65em;
-  font-size: 1.55rem;
-  line-height: 1.35;
-}
-
-.blog-article-body blockquote {
-  width: 112%;
-  margin: 3.5rem 0 3.5rem -6%;
-  padding: 2rem 0 2rem 2rem;
-  border-left: 0.25rem solid var(--bg);
-}
-
-.blog-article-body blockquote p {
-  margin: 0;
-  font-family: var(--type-2);
-  font-size: 2.4rem;
-  line-height: 0.98;
-  letter-spacing: 0;
+  margin-bottom: 1.5em;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.55;
 }
 
 .blog-article-body h2 {
-  margin: 3rem 0 1.25rem 0;
-  font-family: var(--type-1);
-  font-size: 1.7rem;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  margin: 2.25em 0 0.6em;
+  color: var(--borahae);
+  font-size: 1.45rem;
 }
 
 .blog-article-body h3 {
-  margin: 2.25rem 0 1rem 0;
-  font-family: var(--type-1);
-  font-size: 1.2rem;
-  line-height: 1.2;
-}
-
-.blog-article-body .blog-eyebrow {
-  margin: 0 0 0.5rem 0;
-  font-family: var(--type-3);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(7, 7, 7, 0.55);
+  margin: 1.75em 0 0.5em;
 }
 
 .blog-article-body ol,
 .blog-article-body ul {
-  margin: 0 0 1.35em 1.25em;
-  padding: 0;
+  margin: 0 0 1.15em 1.25em;
+  list-style: revert;
 }
 
 .blog-article-body li {
-  margin: 0 0 0.6em 0;
-  color: #070707;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.12rem;
-  line-height: 1.68;
+  margin-bottom: 0.5em;
+  line-height: 1.7;
 }
 
 .blog-article-body hr {
-  margin: 3rem 0;
-  border: none;
-  border-top: 1px solid rgba(7, 7, 7, 0.18);
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1.5px dashed var(--muted);
 }
 
-/* Display equations: own block, span the full (wide) column, and scroll
-   horizontally only if a single line is still too long to fit. */
+.blog-article-body a {
+  color: var(--borahae);
+}
+
+.blog-article-body code {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.88em;
+}
+
+.blog-article-body .blog-eyebrow,
+.blog-article-body .blog-math-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* A long equation scrolls inside its own block. */
 .blog-eq {
-  margin: 1.8em 0;
+  margin: 1.6em 0;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 0.4rem;
-}
-
-.blog-eq mjx-container[display="true"] {
-  margin: 0;
-}
-
-/* slim, unobtrusive scrollbar for overflowing equations */
-.blog-eq {
   scrollbar-width: thin;
-  scrollbar-color: rgba(7, 7, 7, 0.35) transparent;
 }
 
-.blog-eq::-webkit-scrollbar {
-  height: 6px;
+.blog-article-body mjx-container[display="true"] {
+  margin: 0;
+  text-align: left !important;
 }
 
-.blog-eq::-webkit-scrollbar-thumb {
-  background: rgba(7, 7, 7, 0.3);
-  border-radius: 3px;
-}
-
-/* The ELBO call-out box can also hold a long line on small screens */
 .blog-article-body blockquote {
+  max-width: var(--measure);
+  margin: 2rem 0;
   overflow-x: auto;
   overflow-y: hidden;
 }
 
-/* Result callout (e.g. the ELBO): a contained box, on-brand red accent,
-   overriding the bleeding pull-quote treatment used elsewhere. */
+.blog-article-body blockquote p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
 .blog-article-body blockquote.blog-result {
-  width: 100%;
+  --fill: var(--lilac);
+  --stroke: 1.5px solid var(--ink);
+  --corner: var(--wobble-lg);
   max-width: 100%;
-  margin: 3rem 0;
-  padding: 1.85rem 1.75rem;
-  border-left: 0.3rem solid var(--bg);
-  background: rgba(227, 6, 19, 0.05);
 }
 
 .blog-article-body .blog-result-label {
-  margin: 0 0 0.85rem 0;
-  font-family: var(--type-3);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  line-height: 1;
-  color: var(--bg);
-}
-
-.blog-article-body .blog-result p:not(.blog-result-label) {
-  font-family: var(--type-1);
-  font-size: 1.45rem;
-  line-height: 1.2;
-}
-
-.blog-article-body .blog-math-note {
-  margin-top: 2.5rem;
-  font-family: var(--type-3);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: rgba(7, 7, 7, 0.6);
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .blog-next {
-  width: 100%;
-  padding: 8rem 0;
-  background-color: var(--fg);
-  color: var(--bg);
+  max-width: none;
+  padding: 0 var(--gutter) clamp(2rem, 4vw, 3rem);
 }
 
-.blog-next .container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.blog-next p,
-.blog-next a,
-.blog-next h2 {
-  color: var(--bg);
-}
-
-.blog-next a {
-  text-transform: none;
-}
-
-@media (max-width: 1000px) {
-  .blog-hero,
-  .blog-hero .container {
-    min-height: 88svh;
-  }
-
-  .blog-hero-copy {
-    width: 100%;
-    padding-top: 7rem;
-  }
-
-  .blog-hero h1 {
-    font-size: 4rem;
-    line-height: 0.86;
-  }
-
-  .blog-dek {
-    width: 100%;
-    font-size: 1.45rem;
-    line-height: 1.1;
-  }
-
-  .blog-hero-meta {
-    display: none;
-  }
-
-  .blog-ledger {
-    padding: 5rem 0 9rem 0;
-  }
-
-  .blog-ledger-header {
-    width: 100%;
-  }
-
-  .blog-post-row {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .blog-post-row-copy p {
-    width: 100%;
-  }
-
-  .blog-post-row-mark {
-    justify-content: flex-start;
-  }
-
-  .blog-article {
-    padding: 4rem 0 7rem 0;
-  }
-
-  .blog-article .container {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+@media (max-width: 860px) {
+  .blog-article > .container {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .blog-article-rail {
-    position: relative;
-    top: auto;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.28);
-  }
-
-  .blog-article-body {
-    max-width: none;
-  }
-
-  .blog-article-body p {
-    font-size: 1.05rem;
-    line-height: 1.65;
-  }
-
-  .blog-article-body .blog-lede {
-    font-size: 1.35rem;
-  }
-
-  .blog-article-body blockquote {
-    width: 100%;
-    margin: 2.75rem 0;
-    padding: 1.5rem 0 1.5rem 1.25rem;
-  }
-
-  .blog-article-body blockquote p {
-    font-size: 1.8rem;
-  }
-
-  .blog-article-body p,
-  .blog-article-body li,
-  .blog-article-body h2,
-  .blog-article-body h3,
-  .blog-article-body .blog-eyebrow,
-  .blog-article-body .blog-math-note {
-    max-width: none;
-  }
-
-  .blog-article-body h2 {
-    margin: 2.5rem 0 1rem 0;
-    font-size: 1.45rem;
-  }
-
-  .blog-article-body h3 {
-    margin: 2rem 0 0.85rem 0;
-    font-size: 1.1rem;
-  }
-
-  .blog-article-body li {
-    font-size: 1.05rem;
-    line-height: 1.65;
-  }
-
-  /* shrink display math a touch so fewer lines need horizontal scroll */
-  .blog-eq {
-    margin: 1.5em 0;
-  }
-
-  .blog-eq mjx-container[display="true"] {
-    font-size: 92%;
-  }
-}
-
-@media (max-width: 600px) {
-  .blog-article {
-    padding: 3rem 0 5.5rem 0;
-  }
-
-  .blog-article-body p {
-    font-size: 1rem;
-  }
-
-  .blog-article-body .blog-lede {
-    font-size: 1.25rem;
-  }
-
-  .blog-article-body h2 {
-    font-size: 1.3rem;
-  }
-
-  .blog-article-body blockquote p {
-    font-size: 1.4rem;
-  }
-
-  .blog-eq mjx-container[display="true"] {
-    font-size: 86%;
+    position: static;
   }
 }

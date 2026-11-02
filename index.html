@@ -3,263 +3,93 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adb | HITL</title>
+    <title>Ahnaf Adib | ML research and systems</title>
     <meta name="author" content="Ahnaf Adib" />
-    <meta
-      name="description"
-      content="HITL systems builder and ML researcher focused on voice agents, language systems, and applied AI infrastructure."
-    />
-    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Ahnaf Adib researches ML models on tight memory and latency budgets and ships AI systems to production." />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://ad1b.space/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ahnaf Adib" />
+    <meta property="og:title" content="Ahnaf Adib | ML research and systems" />
+    <meta property="og:description" content="Ahnaf Adib researches ML models on tight memory and latency budgets and ships AI systems to production." />
+    <meta property="og:url" content="https://ad1b.space/" />
+    <meta property="og:image" content="https://ad1b.space/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href="/site-icon.png" />
+    <link rel="preload" href="/fonts/lexend.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/fredoka.woff2" as="font" type="font/woff2" crossorigin />
 
     <link rel="stylesheet" href="/globals.css" />
-    <link rel="stylesheet" href="/css/preloader.css" />
-    <link rel="stylesheet" href="/css/nav.css" />
-    <link rel="stylesheet" href="/css/menu.css" />
     <link rel="stylesheet" href="/css/index.css" />
-
     <script>
-      if (sessionStorage.getItem("pageTransition") === "true") {
-        document.documentElement.style.overflow = "hidden";
+      document.documentElement.classList.add("has-js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("signal-pending");
       }
     </script>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
   </head>
   <body>
-    <div class="preloader">
-      <div class="preloader-grid">
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-        <div class="preloader-block"></div>
-      </div>
-
-      <div class="progress-bar">
-        <div class="progress-bar-indicator"></div>
-
-        <div class="progress-bar-copy">
-          <p class="type-mono">&#9654; Loading <span>0%</span></p>
-          <p class="type-mono">Matmulling</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="transition-grid">
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-      <div class="transition-block"></div>
-    </div>
-
-    <script>
-      if (sessionStorage.getItem("pageTransition") === "true") {
-        const grid = document.querySelector(".transition-grid");
-        if (grid) {
-          grid.style.backgroundColor = "var(--bg)";
-          grid.style.zIndex = "1000";
-          grid.style.pointerEvents = "auto";
-        }
-        const blocks = grid.querySelectorAll(".transition-block");
-        blocks.forEach((block) => {
-          block.style.opacity = "1";
-        });
-      }
-    </script>
-
-    <nav>
-      <div class="container">
-        <div class="nav-clock">
-          <p class="type-mono">18 <span>:</span> 25 CT</p>
-        </div>
-
-        <div class="nav-logo">
-          <a href="/" class="type-mono">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1000"
-              height="1000"
-              viewBox="0 0 1000 1000"
-              fill="none"
-            >
-              <g clip-path="url(#clip0_1002_3)">
-                <path
-                  d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z"
-                  fill="black"
-                />
-                <path
-                  d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z"
-                  fill="black"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1002_3">
-                  <rect width="1000" height="1000" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </a>
-        </div>
-
-        <div class="nav-location">
-          <p class="type-mono">
-            <ion-icon name="triangle-sharp"></ion-icon> DFW, TX
-          </p>
-        </div>
-      </div>
-    </nav>
-
-    <div class="menu-toggle-btn">
-      <div class="hamburger-bar"></div>
-      <div class="hamburger-bar"></div>
-    </div>
-
-    <div class="menu-overlay">
-      <div class="menu-bg">
-        <canvas id="menu-canvas"></canvas>
-      </div>
-
-      <div class="menu-overlay-nav">
-        <div class="close-btn">
-          <div class="close-btn-bar"></div>
-          <div class="close-btn-bar"></div>
-        </div>
-
-        <div class="menu-overlay-items">
-          <a
-            class="type-mono"
-            href="https://www.linkedin.com/in/ahnaf-adib369/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >LinkedIn</a
-          >
-          <a
-            class="type-mono"
-            href="https://github.com/KoldAd1b"
-            target="_blank"
-            rel="noopener noreferrer"
-            >GitHub</a
-          >
-        </div>
-      </div>
-
-      <div class="menu-overlay-footer">
-        <a class="type-mono" href="/lab">Research Access</a>
-        <a class="type-mono" href="/blog">Writing</a>
-        <a class="type-mono" href="/contact">Get in Touch</a>
-      </div>
-
-      <div class="circular-menu">
-        <div class="joystick">
-          <ion-icon
-            name="grid-sharp"
-            class="center-icon center-main"
-          ></ion-icon>
-          <ion-icon
-            name="chevron-up-sharp"
-            class="center-icon center-up"
-          ></ion-icon>
-          <ion-icon
-            name="chevron-down-sharp"
-            class="center-icon center-down"
-          ></ion-icon>
-          <ion-icon
-            name="chevron-back-sharp"
-            class="center-icon center-left"
-          ></ion-icon>
-          <ion-icon
-            name="chevron-forward-sharp"
-            class="center-icon center-right"
-          ></ion-icon>
-        </div>
-      </div>
-    </div>
-
-    <section class="hero">
-      <canvas id="skyline"></canvas>
-
-      <h1
-        data-animate-variant="diffuse"
-        data-animate-on-scroll="false"
-        data-animate-delay="0.1"
-      >
-        Adb
-      </h1>
-      <p
-        data-animate-variant="slide"
-        data-animate-type="words"
-        data-animate-on-scroll="false"
-        data-animate-delay="0.75"
-      >
-        Study the art of science and the science of art.
-      </p>
-
-      <div class="hero-footer">
-        <div class="container">
-          <p
-            class="type-mono"
-            data-animate-variant="flicker"
-            data-animate-on-scroll="false"
-            data-animate-delay="1"
-          >
-            The human in the loop
-          </p>
-          <p
-            class="type-mono"
-            data-animate-variant="flicker"
-            data-animate-on-scroll="false"
-            data-animate-delay="1"
-          >
-            [ Python / TypeScript / Multi-Agent ML ]
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <svg
-      viewBox="0 0 0 0"
-      aria-hidden="true"
-      style="position: absolute; width: 0; height: 0; pointer-events: none"
-    >
-      <defs>
-        <filter id="blur-matrix" x="-50%" y="-50%" width="200%" height="200%">
-          <feColorMatrix
-            in="SourceGraphic"
-            type="matrix"
-            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 255 -140"
-          ></feColorMatrix>
-        </filter>
-      </defs>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <svg class="rough-defs" aria-hidden="true">
+      <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="1" seed="4" /><feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G" /></filter>
+      <filter id="rough2"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="11" /><feDisplacementMap in="SourceGraphic" scale="4" xChannelSelector="G" yChannelSelector="R" /></filter>
     </svg>
+    <header class="site-nav">
+      <a class="site-brand" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="currentColor" aria-hidden="true">
+          <path d="M25 500.205C25 633.944 205.38 742.342 427.916 742.342V598.989C278.924 598.989 158.162 526.396 158.162 436.851C158.162 347.307 278.924 274.713 427.916 274.713V258C205.414 258 25 366.432 25 500.137V500.205Z" />
+          <path d="M572.084 258.068V274.781C721.076 274.781 841.839 347.375 841.839 436.919C841.839 526.464 721.076 599.057 572.084 599.057V742.41C794.586 742.41 975 633.978 975 500.273C975 366.568 794.62 258.136 572.084 258.136V258.068Z" />
+        </svg>
+        Ahnaf Adib
+      </a>
+      <nav aria-label="Main">
+        <ul class="site-links">
+          <li><a href="/lab">Research</a></li>
+          <li><a href="/blog">Writing</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/resume.pdf">Résumé</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="content" class="signal" tabindex="-1">
+      <canvas class="signal-canvas" aria-hidden="true"></canvas>
+      <div class="signal-stage">
+        <h1 class="signal-name" aria-label="Ahnaf Adib"><span class="word" aria-hidden="true"><span class="letter" style="--r:-5deg;--y:0.02em">A</span><span class="letter" style="--r:3deg;--y:-0.06em">h</span><span class="letter" style="--r:-2deg;--y:0.05em">n</span><span class="letter" style="--r:6deg;--y:-0.02em">a</span><span class="letter" style="--r:-6deg;--y:0.04em">f</span></span> <span class="word" aria-hidden="true"><span class="letter" style="--r:4deg;--y:-0.05em">A</span><span class="letter" style="--r:-3deg;--y:0.05em">d</span><span class="letter" style="--r:7deg;--y:-0.03em">i</span><span class="letter" style="--r:-4deg;--y:0.03em">b</span></span></h1>
+      </div>
+      <div class="signal-foot">
+        <p class="lead">I research ML models on tight memory and latency budgets, and I ship AI systems to production.</p>
+        <div class="noise">
+          <div class="noise-head">
+            <fieldset class="modes" data-modes>
+              <legend>Sampler</legend>
+            <label class="mode"><input type="radio" name="sampler" value="sde" /><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26 7 20 11 23 15 14 19 18 23 9 27 13 32 7 36 10 42 3"/></svg><span>SDE</span></label>
+            <label class="mode"><input type="radio" name="sampler" value="ode" checked /><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26C14 26 28 20 42 3"/></svg><span>ODE</span></label>
+            <label class="mode"><input type="radio" name="sampler" value="flow" /><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26 42 3"/></svg><span>Flow</span></label>
+            <label class="mode"><input type="radio" name="sampler" value="step" /><svg viewBox="0 0 44 30" aria-hidden="true"><circle cx="4" cy="26" r="2.5" class="fill"/><path d="M40 8C30 -4 10 2 6 22" stroke-dasharray="4 4"/><circle cx="40" cy="8" r="3.4" class="fill"/></svg><span>One step</span></label>
+            <label class="mode"><input type="radio" name="sampler" value="density" /><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26C13 26 15 4 22 4S31 26 42 26"/></svg><span>Fokker-Planck</span></label>
+            </fieldset>
+            <button class="sample" type="button" data-sample>Sample my name</button>
+          </div>
+          <div class="track" data-track>
+            <input id="noise" type="range" min="0" max="1" step="0.01" value="0" aria-label="Noise level" data-noise />
+            <output for="noise" data-noise-value>0.00</output>
+            <span class="track-end track-end-name" aria-hidden="true">name</span>
+            <span class="track-end track-end-noise" aria-hidden="true">noise</span>
+          </div>
+          <p class="noise-note" data-note></p>
+          <a class="noise-math" data-equation href="/academia/diffusion"></a>
+        </div>
+      </div>
+    </main>
 
-    <script type="module" src="/js/preloader.js"></script>
-    <script type="module" src="/js/lenis-scroll.js"></script>
-    <script type="module" src="/js/transition.js"></script>
-    <script type="module" src="/js/nav.js"></script>
-    <script type="module" src="/js/menu.js"></script>
-    <script type="module" src="/js/animated-copy.js"></script>
-    <script type="module" src="/js/skyline.js"></script>
+    <footer class="site-footer">
+      <ul>
+        <li><a href="mailto:ahnafadib7546@gmail.com">Email</a></li>
+        <li><a href="https://github.com/KoldAd1b">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/ahnaf-adib369/">LinkedIn</a></li>
+      </ul>
+    </footer>
+
+    <script type="module" src="/js/signal.js"></script>
   </body>
 </html>
