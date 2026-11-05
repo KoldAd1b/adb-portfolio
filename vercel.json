@@ -15,6 +15,10 @@
       "destination": "/lab/stallbound.html"
     },
     {
+      "source": "/lab/distillation",
+      "destination": "/lab/distillation.html"
+    },
+    {
       "source": "/lab/firmvla",
       "destination": "/lab/firmvla.html"
     },

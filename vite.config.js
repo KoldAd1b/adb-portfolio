@@ -61,6 +61,7 @@ export default defineConfig({
         contact: resolve(__dirname, "contact.html"),
         paperKvCache: resolve(__dirname, "lab/kv-cache.html"),
         paperStallbound: resolve(__dirname, "lab/stallbound.html"),
+        paperDistillation: resolve(__dirname, "lab/distillation.html"),
         paperFirmvla: resolve(__dirname, "lab/firmvla.html"),
         paperEntitlement: resolve(__dirname, "lab/entitlement.html"),
         paperLetItSettle: resolve(__dirname, "lab/let-it-settle.html"),

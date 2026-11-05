@@ -96,8 +96,7 @@
   left: 0;
 }
 
-.paper summary,
-.paper-row {
+.paper summary {
   display: block;
   padding: 0 1.6rem 0 2.6rem;
 }
@@ -271,6 +270,26 @@
 
 .sketch .labels {
   font-size: 14.5px;
+}
+
+/* Research list: a panel that follows the cursor over an entry (js/lab-preview.js). */
+.paper-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  visibility: hidden;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  pointer-events: none;
+}
+
+.paper-preview.is-visible {
+  visibility: visible;
+}
+
+.paper-preview canvas {
+  display: block;
 }
 
 .sheet-foot {
