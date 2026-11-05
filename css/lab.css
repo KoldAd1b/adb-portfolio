@@ -22,26 +22,20 @@
   font-display: swap;
 }
 
-body {
-  background: #f6f3fc;
-}
-
+/* Laid out like a conference paper: one column, a ruled title block, an indented
+   abstract, and a numbered reference list. An entry marked with a plus opens a
+   short summary and links directly beneath it. */
 .desk {
-  padding: clamp(1rem, 3vw, 2.5rem) var(--gutter) clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(1.75rem, 4vw, 3.5rem) var(--gutter) clamp(2rem, 4vw, 3.5rem);
 }
 
-/* One sheet of paper. All type on it is Computer Modern, as in a LaTeX paper. */
 .sheet {
-  max-width: 62rem;
+  max-width: 42rem;
   margin: 0 auto;
-  padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 6.5vw, 5.5rem) clamp(1.5rem, 3vw, 2.5rem);
-  background: var(--paper);
-  box-shadow: 0 0 0 1px rgba(31, 10, 77, 0.08), 0 1px 3px rgba(31, 10, 77, 0.06);
   color: #15082f;
   font-family: "CMU Serif", "Latin Modern Roman", "Times New Roman", serif;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.32;
+  font-size: 1.0625rem;
+  line-height: 1.35;
 }
 
 .sheet p {
@@ -50,27 +44,18 @@ body {
 
 .sheet a {
   color: var(--borahae);
-  text-decoration: none;
-}
-
-.sheet a:hover {
   text-decoration: underline;
-}
-
-.title-block {
-  text-align: center;
-}
-
-.sheet h1 {
-  font-size: clamp(2.2rem, 5vw, 3rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
 }
 
 .author {
-  margin-top: 0.9rem;
-  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.affiliation {
+  margin-top: 0.1rem;
+  font-size: 0.96rem;
 }
 
 .author sup,
@@ -79,86 +64,222 @@ body {
   line-height: 0;
 }
 
-.abstract {
-  max-width: 34rem;
-  margin: 1.75rem auto 0;
-  font-size: 0.97rem;
-}
-
-.abstract h2 {
-  margin-bottom: 0.3rem;
-  font-size: inherit;
-  font-weight: 700;
-}
-
-.abstract p {
-  text-align: justify;
-  text-align-last: center;
-  hyphens: auto;
-}
-
-.columns {
+.paper-list {
   counter-reset: reference;
-  columns: 2;
-  column-gap: 2.25rem;
-  margin-top: 2.5rem;
 }
 
-.columns section {
-  padding-bottom: 1.4rem;
+.paper-list section {
+  margin-top: clamp(1.75rem, 4vw, 2.25rem);
 }
 
-.columns h2 {
-  break-after: avoid;
+.paper-list h2 {
   margin-bottom: 0.6rem;
-  font-size: 1.2rem;
+  font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.25;
 }
 
 .section-number {
-  margin-right: 0.5em;
-  color: var(--borahae);
+  margin-right: 1em;
 }
 
-.columns li {
+.paper-list li {
   counter-increment: reference;
   position: relative;
-  padding-left: 2.1rem;
-  margin-bottom: 0.55rem;
-  break-inside: avoid;
-  text-align: justify;
-  hyphens: auto;
+  margin-top: 0.5rem;
 }
 
-.columns li::before {
+.paper-list li::before {
   content: "[" counter(reference) "]";
   position: absolute;
+  top: 0;
   left: 0;
+}
+
+.paper summary,
+.paper-row {
+  display: block;
+  padding: 0 1.6rem 0 2.6rem;
+}
+
+.paper summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+}
+
+.paper summary::-webkit-details-marker {
+  display: none;
+}
+
+.paper summary::after {
+  content: "+";
+  position: absolute;
+  top: 0;
+  right: 0.1rem;
   color: var(--borahae);
 }
 
-.columns h3 {
+.paper[open] summary::after {
+  content: "\2212";
+}
+
+.paper summary:hover h3,
+.paper[open] h3 {
+  color: var(--borahae);
+}
+
+.paper summary:focus-visible {
+  outline: 2px solid var(--borahae);
+  outline-offset: 2px;
+}
+
+.paper-list h3 {
   display: inline;
   font-size: inherit;
   font-weight: 400;
   line-height: inherit;
 }
 
-.columns cite {
+.paper-list .paper-meta {
+  display: inline;
+}
+
+.paper-list cite {
   font-style: italic;
 }
 
-.pending {
-  color: var(--borahae);
+.paper-body {
+  padding: 0.35rem 1.6rem 0.5rem 2.6rem;
+  font-size: 0.96rem;
 }
 
-/* The footnote rule, as LaTeX draws it. */
+.paper-body .paper-summary {
+  margin-top: 0;
+  line-height: 1.38;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.paper-authors strong {
+  font-weight: 700;
+}
+
+/* A paper's own page: the same title block, an indented summary, then numbered
+   sections with numbered figures. */
+.paper-head {
+  text-align: center;
+}
+
+.paper-page .paper-head {
+  margin-top: 1.5rem;
+}
+
+.paper-head h1 {
+  padding: 0.9rem 0 1rem;
+  border-top: 3px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: clamp(1.4rem, 3.2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.paper-page .paper-authors {
+  margin-top: 1rem;
+}
+
+.paper-page .paper-meta {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted);
+}
+
+.paper-head .paper-links {
+  justify-content: center;
+  margin-top: 0.3rem;
+}
+
+.paper-abstract {
+  margin: 1.75rem auto 0;
+  max-width: 36rem;
+  font-size: 0.96rem;
+}
+
+.paper-abstract h2 {
+  margin-bottom: 0.35rem;
+  font-size: 1.125rem;
+  text-align: center;
+}
+
+.paper-page h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.paper-abstract p,
+.diagram figcaption {
+  line-height: 1.38;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.paper-summary {
+  margin-top: 0.6rem;
+}
+
+.paper-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin-top: 0.8rem;
+}
+
+/* Each section holds one hand-drawn figure: static SVG with a caption beneath. */
+.diagram {
+  margin-top: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.diagram h2 {
+  margin: 0 0 0.7rem;
+}
+
+.diagram .section-number {
+  margin-right: 1em;
+  color: inherit;
+}
+
+.diagram figure {
+  margin: 0;
+}
+
+.diagram figcaption {
+  margin-top: 0.65rem;
+  font-size: 0.96rem;
+}
+
+.sketch {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sketch .labels {
+  font-size: 14.5px;
+}
+
+.sheet-foot {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+
 .footnote {
-  margin-top: 0.5rem;
-  padding-top: 0.45rem;
-  border-top: 0;
-  font-size: 0.875rem;
+  padding-top: 0.4rem;
+  font-size: 0.85rem;
   position: relative;
 }
 
@@ -171,17 +292,18 @@ body {
   border-top: 1px solid currentColor;
 }
 
-@media (max-width: 760px) {
-  .columns {
-    columns: 1;
+@media (max-width: 640px) {
+  .paper-body {
+    padding-left: 0;
   }
 
-  .columns li {
+  .paper-abstract p,
+  .paper-body .paper-summary,
+  .diagram figcaption {
     text-align: left;
   }
 
-  .abstract p {
-    text-align: left;
-    text-align-last: auto;
+  .sketch .labels {
+    font-size: 16px;
   }
 }

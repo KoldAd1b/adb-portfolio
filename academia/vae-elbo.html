@@ -64,7 +64,6 @@
           <li><a href="/lab">Research</a></li>
           <li><a href="/blog" aria-current="page">Writing</a></li>
           <li><a href="/contact">Contact</a></li>
-          <li><a href="/resume.pdf">Résumé</a></li>
         </ul>
       </nav>
     </header>
@@ -83,7 +82,7 @@
           <aside class="blog-article-rail">
             <p class="rail-label">Category</p>
             <p>Variational Inference</p>
-            <p class="rail-label">Signal</p>
+            <p class="rail-label">Summary</p>
             <p>Your network predicts a mean and a variance. You train both against the ELBO.</p>
           </aside>
 
@@ -91,9 +90,7 @@
             <p class="blog-lede">
               The encoder in a variational autoencoder predicts a
               <em>distribution</em> over a latent (a mean and a variance), and
-              you'd like to train it on a likelihood you can't compute. You get
-              around that with a beautiful little maneuver: bound what you can't
-              compute, then close the gap.
+              you'd like to train it on a likelihood you can't compute. You bound what you can't compute, then close the gap.
             </p>
 
             <h2>The encoder outputs a mean and a variance</h2>
@@ -118,8 +115,7 @@
 
             <p>
               To get a latent you have to sample from that Gaussian, and you can't
-              differentiate through a sampling step, so your gradient would never
-              reach \(\mu\) and \(\sigma\). You fix this with the
+              differentiate through a sampling step, so you would get no gradient for \(\mu\) and \(\sigma\). You fix this with the
               <em>reparameterization trick</em>: draw the randomness from a fixed
               standard Gaussian and push it through the predicted parameters,
             </p>
@@ -128,12 +124,12 @@
 
             <p>
               Now \(z\) is a deterministic, differentiable function of \(\mu\) and
-              \(\sigma\), with all the noise quarantined in \(\varepsilon\). I
+              \(\sigma\), with all the noise in \(\varepsilon\). I
               derive this "standard Gaussian to latent" map and the closed form of
               the KL term in the side note at the end.
             </p>
 
-            <h2>The likelihood is out of reach</h2>
+            <h2>The likelihood is intractable</h2>
 
             <p>
               You'd like to train by maximum likelihood: maximize \(\log
@@ -153,13 +149,13 @@
             <div class="blog-eq">\[ p(z \mid x) = \frac{p(x \mid z)\, p(z)}{p(x)}, \]</div>
 
             <p>
-              and the intractable \(p(x)\) sits in its denominator, so the true
+              and its denominator is the intractable \(p(x)\), so the true
               posterior is out of reach too. You brought in
               \(q(z \mid x)\) to approximate that posterior, and now you need a way
               to measure how good the approximation is.
             </p>
 
-            <h2>Two ways to measure the gap, and you can use one</h2>
+            <h2>Forward and reverse KL</h2>
 
             <p>
               You measure the gap between \(q(z \mid x)\) and \(p(z \mid x)\) with
@@ -184,21 +180,19 @@
             <p>
               You minimize the reverse KL. It's the tractable direction, and it's
               the direction you can rearrange into a quantity you can optimize.
-              (Reverse KL is also mode-seeking: you pay less for concentrating
+              (Reverse KL is also mode-seeking: the KL penalty is smaller for concentrating
               \(q\) on one mode of the posterior than for smearing probability
               where the posterior has none. For a sampler, that's the well-behaved
               failure mode.)
             </p>
 
-            <h2>KL comes from surprise</h2>
+            <h2>KL from information content</h2>
 
             <p>
               I like seeing where KL comes from before I use it. The
               information content of an outcome under a density is \(I(x) = -\log
-              p(x)\): rarer outcomes carry more bits. Say you're using the
-              distribution \(q\) and \(p\) is the true one. You pay this much
-              <em>excess</em> information per sample for using the wrong
-              distribution:
+              p(x)\): rarer outcomes have more bits. Say you're using the
+              distribution \(q\) and \(p\) is the true one. The <em>excess</em> information per sample for using the wrong distribution is:
             </p>
 
             <div class="blog-eq">\[ -\log q(x) - \big(-\log p(x)\big) = \log \frac{p(x)}{q(x)}, \]</div>
@@ -211,12 +205,12 @@
             <div class="blog-eq">\[ D_{\mathrm{KL}}(p \,\|\, q) = \int p(x)\, \log \frac{p(x)}{q(x)}\, dx \;\ge\; 0, \]</div>
 
             <p>
-              and it hits zero only when the two distributions agree almost
+              and it equals zero only when the two distributions agree almost
               everywhere. You'll lean on that one non-negativity for the rest of
               the derivation.
             </p>
 
-            <h2>Now the derivation</h2>
+            <h2>Deriving the bound</h2>
 
             <p>
               Write the reverse KL between your encoder and the true posterior,
@@ -240,11 +234,10 @@
 
             <div class="blog-eq">\[ D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big) = -\underbrace{\int q(z \mid x)\, \log \frac{p(x \mid z)\, p(z)}{q(z \mid x)}\, dz}_{\textstyle \mathcal{L}} \; + \; \log p(x). \]</div>
 
-            <h2>Pushing the ELBO up helps you twice</h2>
+            <h2>Maximizing the ELBO</h2>
 
             <p>
-              Call that integral \(\mathcal{L}\). Rearrange the line above and you
-              have an <em>exact identity</em>, with no approximation anywhere:
+              Call that integral \(\mathcal{L}\). Rearrange the line above and you have an <em>exact identity</em>:
             </p>
 
             <div class="blog-eq">\[ \log p(x) = \mathcal{L} + D_{\mathrm{KL}}\!\big(q(z \mid x) \,\|\, p(z \mid x)\big). \]</div>
@@ -271,12 +264,12 @@
               want, is fixed and unreachable, and the gap to it is
               \(D_{\mathrm{KL}}(q \,\|\, p(z \mid x)) \ge 0\). Push
               \(\mathcal{L}\) up and you do two jobs at once: you drive a proxy for
-              the likelihood upward <em>and</em> you squeeze that gap shut, pulling
+              the likelihood upward <em>and</em> you shrink that gap, pulling
               \(q(z \mid x)\) toward the true posterior. You get a tight bound if
               and only if the encoder recovers \(p(z \mid x)\).
             </p>
 
-            <h2>Flipping it into a loss</h2>
+            <h2>The training loss</h2>
 
             <p>
               Optimizers minimize, so you take the negative ELBO as your training
@@ -299,29 +292,18 @@
 
             <hr />
 
-            <h2>Side note: moving the Gaussian into the latents</h2>
+            <h2>Side note: the Gaussian encoder</h2>
+
+
+            <h3>The reparameterization trick</h3>
 
             <p>
-              I left two loose ends above, both about the Gaussian the encoder
-              predicts.
-            </p>
-
-            <h3>The reparameterization trick (the pretty part)</h3>
-
-            <p>
-              I think this move is beautiful. You can't backprop through a coin
-              flip, so you don't even try. You pull the randomness out into a fixed
-              standard Gaussian, sample <em>that</em>, and push it through your
-              predicted mean and variance. The noise stays quarantined, your
-              gradients flow, and you never had to make the network deterministic.
-              It takes one product and one sum, and it still feels a little bit
-              magic to me.
+              You can't backprop through a coin flip, so you pull the randomness out into a fixed standard Gaussian, sample <em>that</em>, and push it through your predicted mean and variance. You keep the noise separate and your gradients flow. It takes one product and one sum, and it still feels like magic to me.
             </p>
 
             <p>
               You need samples \(z \sim \mathcal{N}(\mu, \sigma^2)\), and you need
-              gradients to flow back into \(\mu\) and \(\sigma\). A location-scale
-              Gaussian lets you have both: if \(\varepsilon \sim
+              gradients to flow back into \(\mu\) and \(\sigma\). With a location-scale Gaussian, you have both: if \(\varepsilon \sim
               \mathcal{N}(0, I)\), then
             </p>
 
@@ -329,8 +311,7 @@
 
             <p>
               The stochastic part is the fixed, parameter-free \(\varepsilon\),
-              and \(\mu\) and \(\sigma\) enter only through deterministic, smooth
-              operations. That gives you \(\partial z / \partial \mu = 1\) and
+              and \(\mu\) and \(\sigma\) appear only in deterministic, smooth operations. That gives you \(\partial z / \partial \mu = 1\) and
               \(\partial z /
               \partial \sigma = \varepsilon\), and the expectation
               \(\mathbb{E}_{q}[\,\cdot\,]\) becomes

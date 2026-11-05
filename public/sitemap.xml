@@ -2,6 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://ad1b.space/</loc></url>
   <url><loc>https://ad1b.space/lab</loc></url>
+  <url><loc>https://ad1b.space/lab/kv-cache</loc></url>
+  <url><loc>https://ad1b.space/lab/stallbound</loc></url>
+  <url><loc>https://ad1b.space/lab/firmvla</loc></url>
+  <url><loc>https://ad1b.space/lab/entitlement</loc></url>
+  <url><loc>https://ad1b.space/lab/let-it-settle</loc></url>
+  <url><loc>https://ad1b.space/lab/expert-interventions</loc></url>
+  <url><loc>https://ad1b.space/lab/reliability-gated-transport</loc></url>
+  <url><loc>https://ad1b.space/lab/unseen-mode</loc></url>
+  <url><loc>https://ad1b.space/lab/world-model-search</loc></url>
+  <url><loc>https://ad1b.space/lab/quanta</loc></url>
+  <url><loc>https://ad1b.space/lab/agriculture</loc></url>
   <url><loc>https://ad1b.space/blog</loc></url>
   <url><loc>https://ad1b.space/academia</loc></url>
   <url><loc>https://ad1b.space/academia/diffusion</loc></url>

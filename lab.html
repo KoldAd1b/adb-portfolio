@@ -41,51 +41,139 @@
           <li><a href="/lab" aria-current="page">Research</a></li>
           <li><a href="/blog">Writing</a></li>
           <li><a href="/contact">Contact</a></li>
-          <li><a href="/resume.pdf">Résumé</a></li>
         </ul>
       </nav>
     </header>
     <main id="content" class="desk" tabindex="-1">
       <article class="sheet">
-        <header class="title-block">
+        <header class="paper-head">
           <h1>Research</h1>
           <p class="author">Ahnaf Adib<sup><a href="#gpa" aria-label="Footnote 1">1</a></sup></p>
-          <div class="abstract">
-            <h2>Abstract</h2>
-            <p>I study ML models when memory, time and compute run short. My <a href="/resume.pdf">résumé</a> lists authors, roles and funding for the 12 papers below.</p>
-          </div>
+          <p class="affiliation">The University of Texas at Dallas</p>
         </header>
-        <div id="papers" class="columns">
+        <section class="paper-abstract">
+          <h2>Abstract</h2>
+          <p>The 12 papers I've worked on, by topic. A + opens a summary and links.</p>
+        </section>
+        <div id="papers" class="paper-list">
           <section>
             <h2><span class="section-number">1</span> Serving, memory and scheduling</h2>
             <ol>
-              <li><h3>Model Selection and KV-Cache Allocation Are Coupled under Memory Constraints.</h3> <cite>NeurIPS 2026 LCFM Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>StallBound: The Memory-Bandwidth Limit of Chunked Prefill.</h3> <cite>NeurIPS 2026 On-Device Intelligence Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>FirmVLA: Task-Grounded Sequence-SLO Serving for Heterogeneous Robot Policies.</h3> <cite>CoRL 2026 Efficient Foundation Models Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>Decomposition-Invariant Entitlement: Fair Scheduling for Agentic LLM Programs.</h3> <cite>NeurIPS 2026 AgenticOS Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>Let it Settle: Allocating Test-Time Compute in Looped Language Models.</h3> <cite>ICLR 2027.</cite> <span class="pending">Under review.</span></li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, L. Khan.</span> <h3>Model Selection and KV-Cache Allocation Are Coupled under Memory Constraints.</h3> <span class="paper-meta"><cite>NeurIPS 2026 LCFM Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">On a device with fixed memory, weights and KV cache must fit in one budget, and a smaller cache lowers quality. We tested many models at many context lengths, and the top-scoring model changed as context grew. Choosing a model first and trimming its cache afterward gave lower scores than choosing both together.</p>
+                    <p class="paper-links"><a href="/lab/kv-cache">Read more</a> <a href="https://neurips.cc/virtual/2026/173808">NeurIPS page</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed.</span> <h3>StallBound: The Memory-Bandwidth Limit of Chunked Prefill.</h3> <span class="paper-meta"><cite>NeurIPS 2026 On-Device Intelligence Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">In chunked prefill, a long prompt is split into chunks with decode steps between them, and each chunk step reads all the model weights. The gap between tokens therefore has a minimum equal to that read time, at any chunk size. We measured this minimum on two devices. It grew in a straight line with weight size, with a slope set by memory bandwidth, and solving that line for a latency target gives the maximum model size for that device.</p>
+                    <p class="paper-links"><a href="/lab/stallbound">Read more</a> <a href="https://neurips.cc/virtual/2026/170013">NeurIPS page</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, L. Khan.</span> <h3>FirmVLA: Task-Grounded Sequence-SLO Serving for Heterogeneous Robot Policies.</h3> <span class="paper-meta"><cite>CoRL 2026 Efficient Foundation Models Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">In a fleet, a group of robots sharing one edge GPU, each robot's next actions are requested while the current ones are running, and task success depends on which requests are missed. FirmVLA sets a guarantee for each robot: a minimum number of requests served in any window and a limit on consecutive misses. We accepted a fleet once we could build a repeating timetable for it. Accepted fleets had no violations. With standard schedulers and an equal number of refills, those fleets had violations at high load.</p>
+                    <p class="paper-links"><a href="/lab/firmvla">Read more</a> Earlier version: <a href="https://neurips.cc/virtual/2026/170025">NeurIPS page</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, L. Khan.</span> <h3>Decomposition-Invariant Entitlement: Fair Scheduling for Agentic LLM Programs.</h3> <span class="paper-meta"><cite>NeurIPS 2026 AgenticOS Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">One task can be split into many LLM calls, in any structure. Longest-path accounting counts far less service for a fan-out program than for a sequential program with the same work. Program-VTC adds each call's service to one counter per program and schedules by program, so a program's share of service stays nearly the same for any split, with a small throughput cost.</p>
+                    <p class="paper-links"><a href="/lab/entitlement">Read more</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors">S. Ahmed, P. K. Saha, <strong>A. Adib</strong>, M. S. Zaoad, L. Khan, P. Ranade.</span> <h3>Let it Settle: Allocating Test-Time Compute in Looped Language Models.</h3> <span class="paper-meta"><cite>ICLR 2027.</cite> <span class="pending">Under review.</span></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">In a looped language model, compute can go to more loops or to longer reasoning. Each extra loop raises the cost of processing the prompt and of generating each token. With SETTLE, we measured the loop at which answers stop changing, then used a small labelled set to choose both settings under a compute budget. The best setting differs across models and tasks, and most of the accuracy gain comes from choosing per task instead of per prompt.</p>
+                    <p class="paper-links"><a href="/lab/let-it-settle">Read more</a></p>
+                  </div>
+                </details>
+              </li>
             </ol>
           </section>
           <section>
             <h2><span class="section-number">2</span> Interpretability</h2>
             <ol>
-              <li><h3>What Do Expert Interventions Measure in Mixture-of-Experts Models?</h3> <cite>NeurIPS 2026 Interpretability as a Science Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>Reading Where Distillation Writes: Interpretability-Derived Adapter Placement for Knowledge Distillation.</h3> <cite>EACL.</cite> <span>Accepted.</span></li>
-              <li><h3>Reliability-Gated Transport Tests for Mechanistic Interventions in Diffusion Models.</h3> <cite>AAAI 2027.</cite> <span class="pending">Under review.</span></li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors">S. Ahmed, <strong>A. Adib</strong>, P. K. Saha, L. Khan.</span> <h3>What Do Expert Interventions Measure in Mixture-of-Experts Models?</h3> <span class="paper-meta"><cite>NeurIPS 2026 Interpretability as a Science Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">Researchers switch off or rescale whole experts to explain a prediction from a mixture-of-experts model. We compared that with editing a few neurons selected by their direct effect on the predicted token. Removing those neurons lowered the target's probability more than removing whole experts, which could raise it. Amplifying them raised low-probability targets and had little or negative effect on targets that already had high probability.</p>
+                    <p class="paper-links"><a href="/lab/expert-interventions">Read more</a></p>
+                  </div>
+                </details>
+              </li>
+              <li class="paper-row"><span class="paper-authors">P. K. Saha, S. Ahmed, M. S. Zaoad, <strong>A. Adib</strong>, L. Khan.</span> <h3>Reading Where Distillation Writes: Interpretability-Derived Adapter Placement for Knowledge Distillation.</h3> <span class="paper-meta"><cite>EACL.</cite></span></li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, P. K. Saha, L. Khan.</span> <h3>Reliability-Gated Transport Tests for Mechanistic Interventions in Diffusion Models.</h3> <span class="paper-meta"><cite>AAAI 2027.</cite> <span class="pending">Under review.</span></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">An edit that changes images on one set of prompts might change images in general, or might fail on new prompts. We compared each edit with a random edit of the same size, on prompts, seeds and objects we did not use to find it. We first checked that the measurement was stable enough to trust. If it wasn't, we gave no verdict.</p>
+                    <p class="paper-links"><a href="/lab/reliability-gated-transport">Read more</a></p>
+                  </div>
+                </details>
+              </li>
             </ol>
           </section>
           <section>
             <h2><span class="section-number">3</span> Generative and world models</h2>
             <ol>
-              <li><h3>The Unseen-Mode Problem: Certifying Coverage Failures in Molecular Generators.</h3> <cite>NeurIPS 2026 SIMBIOCHEM Workshop.</cite> <span>Accepted.</span></li>
-              <li><h3>When Does Planning with a World Model Need Search?</h3> <cite>CoRL 2026 Physics Simulation and World Models Workshop.</cite> <span>Accepted.</span></li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, L. Khan.</span> <h3>The Unseen-Mode Problem: Certifying Coverage Failures in Molecular Generators.</h3> <span class="paper-meta"><cite>NeurIPS 2026 SIMBIOCHEM Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">A Boltzmann generator can score well on overlap with a reference and still have almost no samples in a state with a large share of the population. We built an exact lower confidence bound on the probability missing from a basin against a fixed reference, and we found these gaps in released generators of several kinds. We also proved that target mass in a basin cannot be detected from samples if no samples fall in that basin.</p>
+                    <p class="paper-links"><a href="/lab/unseen-mode">Read more</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, S. Ahmed, I. Karim, L. Khan.</span> <h3>When Does Planning with a World Model Need Search?</h3> <span class="paper-meta"><cite>CoRL 2026 Physics Simulation and World Models Workshop.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">Latent world models are used for planning through a search over action sequences, and that search is the largest part of planning time. We compared it with scoring one batch of candidates and keeping the best. Search improved results on object manipulation and arm reaching. On point navigation with replanning, the one-batch method was close to search.</p>
+                    <p class="paper-links"><a href="/lab/world-model-search">Read more</a></p>
+                  </div>
+                </details>
+              </li>
             </ol>
           </section>
           <section>
             <h2><span class="section-number">4</span> Miscellaneous</h2>
             <ol>
-              <li><h3>Quanta: A Fine-Grained Dataset and Benchmark for Arabic Machine-Translation Error Analysis.</h3> <cite>SIGARAB.</cite> <span>Accepted.</span></li>
-              <li><h3>When Growing Food Is No Longer Enough: Indigenous Food Security Study.</h3> <cite>Agriculture &amp; Food Security.</cite> <span>Accepted.</span></li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors">A. Alshammari, A. Alahmari, A. Alaboud, J. A. Harthi, K. A. S. Alzahrani, <strong>A. Adib</strong>, P. T. Brandt, J. Osorio, V. D’Orazio, L. Khan.</span> <h3>Quanta: A Fine-Grained Dataset and Benchmark for Arabic Machine-Translation Error Analysis.</h3> <span class="paper-meta"><cite>SIGARAB.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">Standard metrics produce one score for a machine translation, with no information on the type of error. For English to Arabic, we built a dataset of translation errors with a new hierarchy of error types, and a classifier for those types. The code and data are public.</p>
+                    <p class="paper-links"><a href="/lab/quanta">Read more</a> <a href="https://github.com/AALight/Quanta-Mizan">Code</a></p>
+                  </div>
+                </details>
+              </li>
+              <li>
+                <details class="paper" name="paper">
+                  <summary><span class="paper-authors"><strong>A. Adib</strong>, N. Chakma, A. L. Ruano, P. F. da Silva, M. H. Bukhari, S. Chakma, A. Soltani, M. A. Islam, U. Haque.</span> <h3>When Growing Food Is No Longer Enough: A Study of Indigenous Food Security in Bangladesh.</h3> <span class="paper-meta"><cite>Agriculture &amp; Food Security.</cite></span></summary>
+                  <div class="paper-body">
+                    <p class="paper-summary">We ran focus groups with Indigenous communities of Bangladesh's Chittagong Hill Tracts. Participants told us their land had worn out, so they grow less of their food and buy more with cash-crop income. In seasonal crises, families sell what they own or borrow at high cost, and women carry more of the burden. We argued that food security depends on access to food as well as production.</p>
+                    <p class="paper-links"><a href="/lab/agriculture">Read more</a></p>
+                  </div>
+                </details>
+              </li>
             </ol>
           </section>
         </div>
@@ -102,5 +190,6 @@
         <li><a href="https://www.linkedin.com/in/ahnaf-adib369/">LinkedIn</a></li>
       </ul>
     </footer>
+
   </body>
 </html>

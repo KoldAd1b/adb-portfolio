@@ -60,7 +60,6 @@
           <li><a href="/lab">Research</a></li>
           <li><a href="/blog" aria-current="page">Writing</a></li>
           <li><a href="/contact">Contact</a></li>
-          <li><a href="/resume.pdf">Résumé</a></li>
         </ul>
       </nav>
     </header>
@@ -75,7 +74,7 @@
         <aside class="blog-article-rail">
           <p class="rail-label">Five views</p>
           <p>Distribution, vector field, score, SDE, probability-flow ODE.</p>
-          <p class="rail-label">One object</p>
+          <p class="rail-label">Object</p>
           <p>\( p_t(x) \)</p>
         </aside>
 
@@ -90,7 +89,7 @@
             underplaying its salience, but hey).
           </p>
 
-          <p>You will meet five things of that nature:</p>
+          <p>The five objects:</p>
 
           <ul>
             <li>
@@ -122,35 +121,30 @@
             samples, images say, or molecules, or audio, drawn from some
             distribution \( p_{\text{data}} \), and you have no formula for it.
             You would like <em>new</em> samples that look like they came from the
-            same place. A generative model takes on that whole job: it turns a
-            finite pile of examples into a machine that mimics those examples.
+            same place. A generative model is a sampler you build from a finite pile of examples.
           </p>
 
           <p>
-            The trouble is that \( p_{\text{data}} \) lives in a brutal,
-            high-dimensional space and concentrates on a thin, complicated sliver
-            of it. The pixel arrangements that happen to look like a face take up
+            \( p_{\text{data}} \) is defined on a high-dimensional space, and its mass lies on a thin, complicated sliver of that space. The pixel arrangements that happen to look like a face take up
             a vanishing share of all pixel arrangements. You cannot write that
             distribution down or integrate against it, and you have no direct way
             to sample it. You do have many ways to approximate it.
           </p>
 
-          <h2>A bridge of noise</h2>
+          <h2>The forward process</h2>
 
           <p>
             You can sample one high-dimensional distribution with your eyes
             closed: an isotropic Gaussian \( \mathcal{N}(0, I) \). Skip the
             head-on attack on \(
             p_{\text{data}} \), build a <em>bridge</em> from it to that Gaussian,
-            and learn to walk the bridge backward. I consider that the whole trick,
-            and the math sits on top of it.
+            and learn to walk the bridge backward. I consider that the whole trick, and I write it out in equations below.
           </p>
 
           <p>
             You build the bridge out of noise. Take a clean sample \( x_0 \sim p_{\text{data}}
             \) and corrupt it a little at a time, a touch of Gaussian noise, then
-            a touch more, until no trace of the original survives and you cannot
-            tell the result from a draw of \( \mathcal{N}(0, I) \).
+            a touch more, until you cannot tell the result from a draw of \( \mathcal{N}(0, I) \).
             Index the corruption by a time \( t \) from \( 0 \) to \( 1 \), and at
             each \( t \) you get a noisier version \( x_t \):
           </p>
@@ -159,17 +153,14 @@
             I), \]</div>
 
           <p>
-            with two schedules: \( \alpha_t \), the amount of signal that
-            survives, sliding from \( 1 \) down to \( 0 \), and \( \sigma_t \),
-            the noise mixed in, climbing from \( 0 \) up to \( 1 \). At \( t = 0
+            with two schedules: \( \alpha_t \), the amount of signal that remains, decreasing from \( 1 \) down to \( 0 \), and \( \sigma_t \),
+            the noise mixed in, increasing from \( 0 \) up to \( 1 \). At \( t = 0
             \) you have \( x_0 \) untouched; at \( t = 1 \) the signal is gone and
             only noise remains. (Many people pick \( \alpha_t^2 + \sigma_t^2
-            = 1 \) so the total variance stays fixed. That choice gives you the
-            "variance-preserving" path, and it stops the corrupted samples from
-            blowing up.) I build each view on this one equation.
+            = 1 \) so the total variance stays fixed. That choice defines the "variance-preserving" path.) I build each view on this one equation.
           </p>
 
-          <h2>View one: the density between data and noise</h2>
+          <h2>View one: the distribution</h2>
 
           <p>
             Stop watching one trajectory and watch the whole population. Fix a
@@ -189,17 +180,14 @@
           </p>
 
           <p>
-            You reach for Gaussian noise for a specific reason: the
-            <em>conditional</em> law of \( x_t \) given a specific \( x_0 \)
-            comes out as a clean Gaussian,
+            You use Gaussian noise because the <em>conditional</em> law of \( x_t \) given a specific \( x_0 \) comes out as a clean Gaussian,
           </p>
 
           <div class="blog-eq">\[ p_t(x \mid x_0) = \mathcal{N}\!\big(x;\; \alpha_t x_0,\, \sigma_t^2 I\big), \]</div>
 
           <p>
             centered on the shrinking signal \( \alpha_t x_0 \), spread by the
-            growing noise \( \sigma_t \). You get two gifts from this, and you
-            cherry pick them again and again. Any \( x_t \) takes a single shot
+            growing noise \( \sigma_t \). This has two consequences, and you use both throughout. Any \( x_t \) takes a single shot
             to sample, with no stepping through time: you jump to whatever
             \( t \) you want. The conditional's density, gradient and moments
             all come in closed form, because it is only a Gaussian. (That
@@ -213,8 +201,7 @@
             With the conditional in hand, you can picture the marginal \( p_t \)
             as a <em>mixture</em>: take every
             data point, replace it with a Gaussian blob centered near it of
-            width \( \sigma_t \), and add the blobs up. At small \( t \) the blobs
-            are tiny and sit on the data, so \( p_t \) looks like the sharp, spiky
+            width \( \sigma_t \), and add the blobs up. At small \( t \) the blobs are tiny and centered near the data, so \( p_t \) looks like the sharp, spiky
             data distribution. As \( t \) grows the blobs widen and overlap,
             filling the gaps and smoothing the spikes into hills, until by \( t =
             1 \) they merge into one broad mound. You can read the whole forward
@@ -222,8 +209,7 @@
           </p>
 
           <p>
-            Researchers organized the entire field around one catch. The
-            conditional is a tame Gaussian, but the marginal \( p_t(x) \) is
+            Researchers organized the entire field around one catch. The conditional is a Gaussian, but the marginal \( p_t(x) \) is
             that mixture over <em>every</em> data point at once:
           </p>
 
@@ -233,11 +219,10 @@
           <p>
             To evaluate it at a single \( x \) you would integrate against \(
             p_{\text{data}} \), the one thing you cannot do. Mathematicians call
-            it intractable. That leaves you in the strange situation that defines
-            the subject: you can <em>draw</em> from
+            it intractable. You can <em>draw</em> from
             \( p_t \) for free, by noising a random data point, and you can almost
             never <em>evaluate</em> \( p_t(x) \). Fitting a normalized
-            model \( q_\theta \approx p_t \) will not save you either, because
+            model \( q_\theta \approx p_t \) does not help either, because
             its normalizing constant \( Z_\theta = \int q_\theta \) is the same
             intractable integral. You pick the wrong target if you chase the
             density as a number, so in each remaining view you track something
@@ -245,7 +230,7 @@
           </p>
 
           <blockquote class="blog-result">
-            <p class="blog-result-label">The crux</p>
+            <p class="blog-result-label">Easy to sample, hard to evaluate</p>
             <p>
               \( x_t = \alpha_t x_0 + \sigma_t \varepsilon \) gives you a sample of \( p_t \)
               in one step, while \( p_t(x) = \int \mathcal{N}(x;\, \alpha_t x_0,\,
@@ -254,28 +239,24 @@
             </p>
           </blockquote>
 
-          <h2>View two: the velocity that carries the density</h2>
+          <h2>View two: the vector field</h2>
 
           <p>
             Picture the family \( p_t \) as frames of a film: data at the start,
             noise at the end. You watch a film and you see motion, and motion
-            implies a velocity. The vector field \( u_t(x) \) gives you that
-            velocity: at each point in space and each instant, it tells you which
-            way probability mass is moving and how fast. Get this field and you
+            implies a velocity. The vector field \( u_t(x) \) is that velocity: at each point in space and each instant, its value is the direction and speed of probability mass. Get this field and you
             generate by following the arrows, a method so easy it embarrasses me.
           </p>
 
           <p>
-            If you transport mass with velocity \( u_t(x) \), you cannot let the
-            density change however it pleases, because it has to conserve
-            probability. You write that bookkeeping as the continuity equation,
+            If you transport mass with velocity \( u_t(x) \), the density can change only in ways that conserve probability. You write that bookkeeping as the continuity equation,
           </p>
 
           <div class="blog-eq">\[ \partial_t p_t(x) + \nabla \cdot \big(p_t(x)\, u_t(x)\big) = 0, \]</div>
 
           <p>
             which reads: the rate density piles up at a point equals the net mass
-            flowing in. Any field obeying this drags \( p_0 \) through the exact
+            flowing in. Any field satisfying this moves \( p_0 \) through the exact
             frames \( p_t \). Find \( u_t \) and you generate by solving
             an ordinary differential equation,
           </p>
@@ -284,14 +265,13 @@
 
           <p>
             starting from a noise sample at \( t = 1 \) and integrating back down
-            to \( t = 0 \). You add no randomness along the way, and you follow
-            the field home.
+            to \( t = 0 \). You add no randomness along the way.
           </p>
 
           <p>
             You get \( u_t \) with the same trick as everywhere in diffusion: one
             data point is easy, and the whole distribution is hard. Condition on a
-            clean \( x_0 \). That point rides the curve \( x_t = \alpha_t x_0 +
+            clean \( x_0 \). That point lies on the curve \( x_t = \alpha_t x_0 +
             \sigma_t \varepsilon \) for a frozen \( \varepsilon \), and you read
             its velocity off the time derivative. Substitute \( \varepsilon = (x
             - \alpha_t x_0)/\sigma_t \) and you get
@@ -302,8 +282,7 @@
 
           <p>
             That formula is explicit, but it gives you the velocity for
-            <em>one</em> data point, and many points can send mass through the
-            same \( x \) at time \( t \). The true field is the posterior average
+            <em>one</em> data point, and mass from many points can pass through the same \( x \) at time \( t \). The true field is the posterior average
             over all of them,
           </p>
 
@@ -311,20 +290,17 @@
 
           <p>
             an expectation over \( p(x_0 \mid x_t) \), as intractable as the
-            marginal density itself. You skip computing it, regress against the
-            easy conditional target, and let least squares do the averaging:
+            marginal density itself. You skip computing it and regress against the easy conditional target, because the least-squares solution is that average:
           </p>
 
           <div class="blog-eq">\[ \mathcal{L}(\theta) = \mathbb{E}_{t,\, x_0,\, \varepsilon}\, \big\| v_\theta(x_t, t) -
             u_t(x_t \mid x_0) \big\|^2. \]</div>
 
           <p>
-            I like this step a lot. The minimizer of a squared error is a
-            conditional mean, so when your network best fits the easy, per-sample
-            targets, it <em>has to</em> predict their average, and that average is the
+            The minimizer of a squared error is a
+            conditional mean, so a network that best fits the easy, per-sample targets predicts their average, and that average is the
             marginal field \( u_t(x) \) you could not write down. You never form
-            the expectation yourself, because minimizing the loss gets you there
-            for free. People call this flow matching. Take the straight-line schedule
+            the expectation yourself, because its value is the minimizer of the loss. People call this flow matching. Take the straight-line schedule
             \( \alpha_t = 1 - t,\, \sigma_t = t \): it gives \( x_t = (1-t)x_0 + t
             \varepsilon \) and a constant conditional velocity \( u_t(x \mid x_0) =
             \varepsilon - x_0 \), so each data point drifts in a straight line
@@ -340,16 +316,14 @@
             </p>
           </blockquote>
 
-          <h2>View three: the gradient that points home</h2>
+          <h2>View three: the score</h2>
 
           <p>
-            View one left you stuck on the normalizing constant. You escape with
-            the score, which lets you ignore that constant. Instead of the
+            In view one, you could not compute the normalizing constant. The score does not depend on that constant. Instead of the
             density, track its log-gradient \( \nabla \log
-            p_t(x) \), a field pointing in the direction the density climbs
-            fastest. Write any density as \( p_t(x) = \tilde p_t(x) / Z_t \), an
+            p_t(x) \), a field pointing in the direction of steepest increase in density. Write any density as \( p_t(x) = \tilde p_t(x) / Z_t \), an
             unnormalized part over a constant. Take the
-            log-gradient (this will be very familiar to the PPO people):
+            log-gradient (PPO people will know this one):
           </p>
 
           <div class="blog-eq">\[ \nabla_x \log p_t(x) = \nabla_x \log \tilde p_t(x) - \underbrace{\nabla_x \log
@@ -357,27 +331,20 @@
 
           <p>
             \( Z_t \) does not depend on \( x \), so its gradient is zero and the
-            constant drops out, which I still find lovely. The score gives you
-            the <em>shape</em> of the density, where it rises and falls, without
-            its absolute scale, and for generation that is plenty: to walk toward
-            data you only need to know which way the data goes! You leave exactness
-            to the model, since that is what a function learner is good for anyways.
+            constant drops out, which I still find lovely. The score describes the <em>shape</em> of the density, where it rises and falls, without
+            its absolute scale, and for generation that is plenty: to reach the data you need only the direction! You approximate the rest with a model, since that is what a function learner is good for anyways.
           </p>
 
           <p>
-            The conditional gives you another gift: you can write a Gaussian's
-            log-gradient down in one line,
+            The conditional is Gaussian, so you can write its log-gradient down in one line,
           </p>
 
           <div class="blog-eq">\[ \nabla_x \log p_t(x \mid x_0) = -\frac{x - \alpha_t x_0}{\sigma_t^2} =
             -\frac{\varepsilon}{\sigma_t}, \]</div>
 
           <p>
-            using \( x = \alpha_t x_0 + \sigma_t \varepsilon \). Look at that
-            right-hand side, because I am telling you it is important: the
-            conditional score is the noise you added, rescaled. Point along \( -\varepsilon
-            \) and you point straight back at the clean sample. I read the score
-            as a denoiser in different clothes. The marginal score is again a
+            using \( x = \alpha_t x_0 + \sigma_t \varepsilon \). The right-hand side shows the conditional score is the noise you added, rescaled. Point along \( -\varepsilon
+            \) and you point straight back at the clean sample. I read the score as a denoiser. The marginal score is again a
             posterior average, and you take it by regression instead of
             integration:
           </p>
@@ -402,8 +369,7 @@
             trained one network under three names. You can also generate from the
             score alone: Langevin
             dynamics, \( x \leftarrow x + \tfrac{\eta}{2} \nabla \log p_t(x) +
-            \sqrt{\eta}\, z \), walks uphill toward the data with a little noise
-            for exploration.
+            \sqrt{\eta}\, z \), is a gradient ascent step on the log-density plus a little noise for exploration.
           </p>
 
           <blockquote class="blog-result">
@@ -415,7 +381,7 @@
             </p>
           </blockquote>
 
-          <h2>View four: noising as a process you can run backward</h2>
+          <h2>View four: the SDE</h2>
 
           <p>
             Up to now you have treated the path as a sequence of snapshots. Zoom
@@ -431,8 +397,7 @@
             Brownian motion, the continuous-time limit of sprinkling in fresh
             Gaussian noise at every step. The choice \( f = -\tfrac{1}{2}\beta(t)
             x \) and \( g = \sqrt{\beta(t)} \) is the continuous limit of
-            the DDPM noising chain, and stepping it forward from \( x_0 \) drifts
-            you into \( \mathcal{N}(0, I) \). Its
+            the DDPM noising chain, and stepping it forward from \( x_0 \) ends near \( \mathcal{N}(0, I) \). Its
             distribution at time \( t \) is our \( p_t \), and you link the two
             with the <a href="/academia/fokker-planck">Fokker-Planck equation</a>,
           </p>
@@ -441,23 +406,17 @@
             \nabla^2 p_t(x). \]</div>
 
           <p>
-            A theorem of Anderson (1982) gives you the payoff: the time-reversal
-            of that forward SDE is itself an SDE,
+            Anderson (1982) proved that the time-reversal of that forward SDE is itself an SDE,
           </p>
 
           <div class="blog-eq">\[ dx = \big[\, f(x, t) - g(t)^2\, \nabla_x \log p_t(x) \,\big]\, dt + g(t)\, d\bar W, \]
           </div>
 
           <p>
-            which you integrate from \( t = 1 \) back to \( t = 0 \). Look at the
-            reverse drift: the forward drift, corrected by the score from view
-            three. You still have the randomness that destroyed the signal, and
-            now the score correction steers it back toward the data at each
-            instant. Drop in a trained \(
+            which you integrate from \( t = 1 \) back to \( t = 0 \). The reverse drift is the forward drift, corrected by the score from view three. You still add noise at each step, and the score term adds a drift toward the data at each instant. Drop in a trained \(
             s_\theta \approx \nabla \log p_t \), start from \( \mathcal{N}(0, I)
             \), integrate down, and you land with a sample from \(
-            p_0 \) in your hands. The equation that ruined the data needs one
-            extra score term to rebuild it, and I like that.
+            p_0 \) in your hands. The reverse equation differs from the forward one by a single score term, and I like that.
           </p>
 
           <blockquote class="blog-result">
@@ -469,7 +428,7 @@
             </p>
           </blockquote>
 
-          <h2>View five: the same path, minus the randomness</h2>
+          <h2>View five: the probability-flow ODE</h2>
 
           <p>
             You can generate well with the reverse SDE, but you carry randomness
@@ -501,9 +460,7 @@
             how tidy that loop is. Set it beside the reverse SDE
             drift \( f - g^2 \nabla \log p_t \): you have the same ingredients,
             with the score's coefficient halved. You pay for determinism with that
-            one factor of two and nothing else. The SDE uses the score twice as
-            hard because it also has to undo the noise it keeps injecting; the ODE
-            injects none, so half as much score does the job.
+            one factor of two and nothing else. The SDE has twice the score coefficient because its extra score term offsets the noise added at each step. The ODE adds no noise, so half the coefficient is enough.
           </p>
 
           <p>Strip the randomness and you buy three things worth the trouble:</p>
@@ -512,7 +469,7 @@
             <li>
               <strong>Deterministic sampling.</strong> Fix the initial noise and
               you fix the output. You get a map from latent to image that is a
-              true function, so interpolation and editing behave.
+              true function, so interpolation and editing are well defined.
             </li>
             <li>
               <strong>Exact likelihoods.</strong> A deterministic flow is a
@@ -539,7 +496,7 @@
             </p>
           </blockquote>
 
-          <h2>One density, many ways of looking at it</h2>
+          <h2>Summary</h2>
 
           <p>
             Line the views up and you see one density \( p_t \) carrying data to
@@ -554,8 +511,7 @@
           </p>
 
           <p>
-            Schrödinger stayed fascinated with particles for a reason: they govern
-            everything. In another article I will explore his bridges (Schrödinger
+            Schrödinger stayed fascinated with particles. In another article I will explore his bridges (Schrödinger
             Bridges).
           </p>
         </div>

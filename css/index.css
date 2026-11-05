@@ -101,6 +101,50 @@ body .site-footer {
   line-height: 1.4;
 }
 
+.epigraph {
+  margin: 0.9rem 0 0.25rem;
+  max-width: 24rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.epigraph cite {
+  display: block;
+  margin-top: 0.15rem;
+  font-style: normal;
+}
+
+/* The portrait stays hidden until the quote is hovered, or focused by keyboard or tap.
+   It sits above the whole intro so it never covers the text. */
+.intro {
+  position: relative;
+}
+
+.epigraph:focus-visible {
+  outline: 2px solid var(--borahae);
+  outline-offset: 4px;
+}
+
+.epigraph-portrait {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 2;
+  width: 9rem;
+  height: auto;
+  border: 1px solid var(--ink);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.epigraph:hover .epigraph-portrait,
+.epigraph:focus .epigraph-portrait {
+  opacity: 1;
+  visibility: visible;
+}
+
 .noise {
   display: none;
 }

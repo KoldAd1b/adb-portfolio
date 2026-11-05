@@ -7,6 +7,50 @@
       "destination": "/lab.html"
     },
     {
+      "source": "/lab/kv-cache",
+      "destination": "/lab/kv-cache.html"
+    },
+    {
+      "source": "/lab/stallbound",
+      "destination": "/lab/stallbound.html"
+    },
+    {
+      "source": "/lab/firmvla",
+      "destination": "/lab/firmvla.html"
+    },
+    {
+      "source": "/lab/entitlement",
+      "destination": "/lab/entitlement.html"
+    },
+    {
+      "source": "/lab/let-it-settle",
+      "destination": "/lab/let-it-settle.html"
+    },
+    {
+      "source": "/lab/expert-interventions",
+      "destination": "/lab/expert-interventions.html"
+    },
+    {
+      "source": "/lab/reliability-gated-transport",
+      "destination": "/lab/reliability-gated-transport.html"
+    },
+    {
+      "source": "/lab/unseen-mode",
+      "destination": "/lab/unseen-mode.html"
+    },
+    {
+      "source": "/lab/world-model-search",
+      "destination": "/lab/world-model-search.html"
+    },
+    {
+      "source": "/lab/quanta",
+      "destination": "/lab/quanta.html"
+    },
+    {
+      "source": "/lab/agriculture",
+      "destination": "/lab/agriculture.html"
+    },
+    {
       "source": "/blog",
       "destination": "/blog.html"
     },
